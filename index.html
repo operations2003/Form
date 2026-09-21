@@ -2553,7 +2553,7 @@
             }
         }
 
-        function resetItDefaultSignature() {
+        function resetItDefaultSignature(quiet = false) {
             if (!defaultMaamSigURL) defaultMaamSigURL = createSignaturePNG("Sheetal", "#1e3a8a");
             const itImg = document.getElementById('itCeoSignImage');
             if (itImg) itImg.src = defaultMaamSigURL;
@@ -2561,10 +2561,10 @@
             if (fileInput) fileInput.value = '';
             const fileNameEl = document.getElementById('itSigFileName');
             if (fileNameEl) fileNameEl.style.display = 'none';
-            showToast('IT Signature reset to default', 'loading', 2000);
+            if (!quiet) showToast('IT Signature reset to default', 'loading', 2000);
         }
 
-        function resetOpsDefaultSignature() {
+        function resetOpsDefaultSignature(quiet = false) {
             if (!defaultMaamSigURL) defaultMaamSigURL = createSignaturePNG("Sheetal", "#1e3a8a");
             const opsImg = document.getElementById('opsCeoSignImage');
             if (opsImg) opsImg.src = defaultMaamSigURL;
@@ -2572,7 +2572,7 @@
             if (fileInput) fileInput.value = '';
             const fileNameEl = document.getElementById('opsSigFileName');
             if (fileNameEl) fileNameEl.style.display = 'none';
-            showToast('Operations Signature reset to default', 'loading', 2000);
+            if (!quiet) showToast('Operations Signature reset to default', 'loading', 2000);
         }
 
         // Backward compatibility wrappers
@@ -2596,9 +2596,14 @@
                     count++;
                 }
             });
-            if (count > 0) {
-                const avg = (sum / count).toFixed(2);
-                document.getElementById('opsLiveScoreBadge').innerHTML = `Average Score: <strong>${avg} / 5.0</strong>`;
+            const badge = document.getElementById('opsLiveScoreBadge');
+            if (badge) {
+                if (count > 0) {
+                    const avg = (sum / count).toFixed(2);
+                    badge.innerHTML = `Average Score: <strong>${avg} / 5.0</strong>`;
+                } else {
+                    badge.innerHTML = `Average Score: <strong>— / 5.0</strong>`;
+                }
             }
         }
 
@@ -2612,9 +2617,14 @@
                     count++;
                 }
             });
-            if (count > 0) {
-                const avg = (sum / count).toFixed(2);
-                document.getElementById('itLiveScoreBadge').innerHTML = `Average Score: <strong>${avg} / 5.0</strong>`;
+            const badge = document.getElementById('itLiveScoreBadge');
+            if (badge) {
+                if (count > 0) {
+                    const avg = (sum / count).toFixed(2);
+                    badge.innerHTML = `Average Score: <strong>${avg} / 5.0</strong>`;
+                } else {
+                    badge.innerHTML = `Average Score: <strong>— / 5.0</strong>`;
+                }
             }
         }
 
@@ -2704,20 +2714,51 @@
         }
 
         // ==========================================
-        // 6. Reset Active Form
+        // 6. Reset & Clear Forms to Blank
         // ==========================================
-        function resetCurrentForm() {
-            const formId = currentDepartment === 'operations' ? 'operationsForm' : 'itPerformanceForm';
-            if (confirm(`Are you sure you want to reset all fields in the ${currentDepartment.toUpperCase()} form?`)) {
-                document.getElementById(formId).reset();
-                if (currentDepartment === 'operations') {
-                    resetOpsDefaultSignature();
-                    calculateOpsAvgScore();
+        function clearForm(formId) {
+            const form = document.getElementById(formId);
+            if (!form) return;
+
+            // 1. Clear all inputs (text, date, number, radios, checkboxes, etc.)
+            form.querySelectorAll('input').forEach(inp => {
+                if (inp.type === 'radio' || inp.type === 'checkbox') {
+                    inp.checked = false;
+                } else if (inp.type === 'file') {
+                    inp.value = '';
+                } else if (inp.type === 'button' || inp.type === 'submit') {
+                    // skip buttons
                 } else {
-                    resetItDefaultSignature();
-                    calculateItAvgScore();
+                    inp.value = '';
                 }
-                showToast('Form reset to default values', 'loading', 2000);
+            });
+
+            // 2. Clear all textareas
+            form.querySelectorAll('textarea').forEach(ta => {
+                ta.value = '';
+            });
+
+            // 3. Reset select dropdowns
+            form.querySelectorAll('select').forEach(sel => {
+                sel.selectedIndex = -1;
+            });
+        }
+
+        function resetCurrentForm() {
+            if (confirm('Are you sure you want to clear all data and reset to a completely blank form?')) {
+                // Blank out all data fields on both forms
+                clearForm('operationsForm');
+                clearForm('itPerformanceForm');
+
+                // Ensure default Sheetal Ma'am signature preview is maintained
+                resetOpsDefaultSignature(true);
+                resetItDefaultSignature(true);
+
+                // Reset average score badges to blank display
+                calculateOpsAvgScore();
+                calculateItAvgScore();
+
+                showToast('All data has been cleared and blanked on both forms', 'success', 2500);
             }
         }
 
