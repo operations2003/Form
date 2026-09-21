@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IT Team Performance Review &amp; PDF Generator</title>
+    <title>Team Performance Review Portal | Operations &amp; IT</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,9 +12,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
         rel="stylesheet">
 
-    <!-- html2canvas 1.4.1 & jsPDF 2.5.1 -->
+    <!-- html2canvas 1.4.1, jsPDF 2.5.1 & SheetJS xlsx 0.18.5 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <style>
         :root {
@@ -23,6 +24,13 @@
             --primary-light: #eff6ff;
             --accent: #2563eb;
             --accent-subtle: #dbeafe;
+
+            --ops-primary: #0f766e;
+            --ops-primary-hover: #115e59;
+            --ops-primary-light: #f0fdfa;
+            --ops-accent: #0d9488;
+            --ops-accent-subtle: #ccfbf1;
+
             --success: #059669;
             --success-light: #ecfdf5;
             --warning: #d97706;
@@ -51,7 +59,7 @@
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
-            padding: 30px 16px 60px;
+            padding: 24px 16px 60px;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
         }
@@ -63,12 +71,12 @@
 
         /* Top Action Bar */
         .top-nav {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(12px);
             border: 1px solid var(--border-light);
             border-radius: var(--radius-lg);
             padding: 16px 24px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -76,6 +84,7 @@
             position: sticky;
             top: 16px;
             z-index: 100;
+            gap: 16px;
         }
 
         .brand-badge {
@@ -85,17 +94,18 @@
         }
 
         .brand-icon {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #1e3a8a, #0f766e);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 10px rgba(15, 118, 110, 0.25);
+            transition: all 0.3s;
         }
 
         .brand-text h2 {
@@ -121,9 +131,9 @@
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            font-size: 13.5px;
+            gap: 7px;
+            padding: 9px 16px;
+            font-size: 13px;
             font-weight: 600;
             border-radius: var(--radius-sm);
             border: 1px solid transparent;
@@ -139,12 +149,34 @@
         .btn-primary {
             background: linear-gradient(135deg, #1e40af, #2563eb);
             color: white;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+            box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
         }
 
         .btn-primary:hover {
             background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
-            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
+            box-shadow: 0 5px 14px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-ops-primary {
+            background: linear-gradient(135deg, #0f766e, #0d9488);
+            color: white;
+            box-shadow: 0 3px 10px rgba(13, 148, 136, 0.3);
+        }
+
+        .btn-ops-primary:hover {
+            background: linear-gradient(135deg, #115e59, #0f766e);
+            box-shadow: 0 5px 14px rgba(13, 148, 136, 0.4);
+        }
+
+        .btn-excel {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.25);
+        }
+
+        .btn-excel:hover {
+            background: linear-gradient(135deg, #047857, #059669);
+            box-shadow: 0 5px 14px rgba(16, 185, 129, 0.35);
         }
 
         .btn-secondary {
@@ -158,6 +190,91 @@
             border-color: #94a3b8;
         }
 
+        /* Department Switcher Banner */
+        .dept-switcher-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            padding: 8px 10px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .switcher-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding-left: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .switcher-tabs {
+            display: flex;
+            gap: 8px;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: var(--radius-md);
+        }
+
+        .tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 20px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #64748b;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+        }
+
+        .tab-btn.active.ops-tab {
+            background: white;
+            color: #0f766e;
+            box-shadow: 0 3px 8px rgba(15, 118, 110, 0.15);
+            font-weight: 700;
+        }
+
+        .tab-btn.active.it-tab {
+            background: white;
+            color: #1e3a8a;
+            box-shadow: 0 3px 8px rgba(30, 58, 138, 0.15);
+            font-weight: 700;
+        }
+
+        .tab-badge {
+            font-size: 10.5px;
+            padding: 2px 7px;
+            border-radius: 999px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .ops-tab .tab-badge {
+            background: #ccfbf1;
+            color: #0f766e;
+        }
+
+        .it-tab .tab-badge {
+            background: #dbeafe;
+            color: #1e3a8a;
+        }
+
         /* Form Card */
         .form-card {
             background: var(--surface);
@@ -165,17 +282,26 @@
             border: 1px solid var(--border-light);
             box-shadow: var(--shadow-lg);
             overflow: hidden;
+            margin-bottom: 30px;
+            transition: opacity 0.25s ease;
         }
 
-        /* Document Header Banner */
+        .form-card.hidden {
+            display: none !important;
+        }
+
+        /* Document Header Banners */
         .doc-header {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #1e3a8a 100%);
             color: white;
-            padding: 36px 40px;
+            padding: 34px 40px;
             position: relative;
         }
 
-        .doc-header::after {
+        .doc-header.it-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 45%, #1e3a8a 100%);
+        }
+
+        .doc-header.it-header::after {
             content: '';
             position: absolute;
             bottom: 0;
@@ -183,6 +309,20 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+        }
+
+        .doc-header.ops-header {
+            background: linear-gradient(135deg, #064e3b 0%, #134e4a 50%, #0f766e 100%);
+        }
+
+        .doc-header.ops-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #34d399, #14b8a6, #2dd4bf);
         }
 
         .doc-tag {
@@ -195,32 +335,40 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            color: #93c5fd;
             margin-bottom: 12px;
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
+        .it-header .doc-tag {
+            color: #93c5fd;
+        }
+
+        .ops-header .doc-tag {
+            color: #99f6e4;
+        }
+
         .doc-header h1 {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 800;
             letter-spacing: -0.5px;
             margin-bottom: 6px;
         }
 
         .doc-header p {
-            font-size: 14px;
-            color: #cbd5e1;
-            max-width: 600px;
+            font-size: 13.5px;
+            color: #e2e8f0;
+            max-width: 680px;
+            line-height: 1.5;
         }
 
         /* Form Body */
         .form-body {
-            padding: 40px;
+            padding: 38px 40px;
         }
 
         /* Section Layout */
         .section {
-            margin-bottom: 38px;
+            margin-bottom: 36px;
             page-break-inside: avoid;
             break-inside: avoid;
         }
@@ -243,43 +391,50 @@
         .section-num {
             width: 26px;
             height: 26px;
-            background: var(--primary-light);
-            color: var(--accent);
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 800;
+        }
+
+        .it-theme .section-num {
+            background: var(--primary-light);
+            color: var(--accent);
+        }
+
+        .ops-theme .section-num {
+            background: var(--ops-primary-light);
+            color: var(--ops-primary);
         }
 
         .section-title {
-            font-size: 16px;
+            font-size: 15.5px;
             font-weight: 700;
-            color: #0f172a;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: #1e293b;
+            letter-spacing: -0.2px;
         }
 
         .section-subtitle {
-            font-size: 12.5px;
+            font-size: 12px;
             color: var(--text-muted);
             margin-top: 2px;
         }
 
-        /* Grid System */
+        /* Grid utilities */
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         .grid-3 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 20px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         .form-group {
@@ -290,7 +445,7 @@
 
         .form-group.full {
             grid-column: 1 / -1;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         label {
@@ -303,23 +458,25 @@
 
         .req {
             color: var(--danger);
-            margin-left: 2px;
+            font-weight: 700;
         }
 
+        /* Inputs */
         input[type="text"],
         input[type="date"],
         input[type="number"],
         select,
         textarea {
-            padding: 10px 14px;
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            font-size: 13.5px;
-            background-color: #fafbfc;
-            color: var(--text-main);
-            transition: all 0.2s ease;
             width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: #fafbfc;
+            font-size: 13.5px;
+            color: var(--text-main);
+            font-family: inherit;
+            transition: all 0.18s ease;
+            box-sizing: border-box;
         }
 
         input[type="text"]:focus,
@@ -328,55 +485,30 @@
         select:focus,
         textarea:focus {
             outline: none;
+            background: #ffffff;
+        }
+
+        .it-theme input:focus,
+        .it-theme select:focus,
+        .it-theme textarea:focus {
             border-color: var(--accent);
-            background-color: #ffffff;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .ops-theme input:focus,
+        .ops-theme select:focus,
+        .ops-theme textarea:focus {
+            border-color: var(--ops-accent);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
         }
 
         textarea {
             resize: vertical;
             min-height: 85px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            word-break: break-word;
+            line-height: 1.55;
         }
 
-        .pdf-rendered-block {
-            display: block;
-            width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid #cbd5e1;
-            border-radius: var(--radius-sm);
-            background: #ffffff;
-            font-size: 13px;
-            line-height: 1.6;
-            color: var(--text-main);
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            word-break: break-word;
-            box-sizing: border-box;
-            min-height: 70px;
-        }
-
-        .pdf-rendered-inline {
-            display: block;
-            width: 100%;
-            padding: 8px 10px;
-            border: 1.5px solid #cbd5e1;
-            border-radius: var(--radius-sm);
-            background: #ffffff;
-            font-size: 13px;
-            color: var(--text-main);
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            word-break: break-word;
-            box-sizing: border-box;
-        }
-
-        /* Rating Scale Cards */
+        /* Rating scale reference */
         .rating-scale-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -394,8 +526,15 @@
         }
 
         .scale-card:hover {
-            border-color: var(--accent);
             transform: translateY(-2px);
+        }
+
+        .it-theme .scale-card:hover {
+            border-color: var(--accent);
+        }
+
+        .ops-theme .scale-card:hover {
+            border-color: var(--ops-accent);
         }
 
         .scale-val {
@@ -403,12 +542,19 @@
             width: 28px;
             height: 28px;
             line-height: 28px;
-            background: var(--primary);
             color: white;
             font-weight: 800;
             font-size: 13px;
             border-radius: 50%;
             margin-bottom: 6px;
+        }
+
+        .it-theme .scale-val {
+            background: var(--primary);
+        }
+
+        .ops-theme .scale-val {
+            background: var(--ops-primary);
         }
 
         .scale-title {
@@ -423,6 +569,29 @@
             color: var(--text-muted);
             margin-top: 2px;
             display: block;
+        }
+
+        /* Score Badge */
+        .avg-score-badge {
+            font-size: 12.5px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .it-theme .avg-score-badge {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+        .ops-theme .avg-score-badge {
+            background: #f0fdfa;
+            color: #0f766e;
+            border: 1px solid #99f6e4;
         }
 
         /* Tables */
@@ -442,91 +611,30 @@
 
         table.custom-table th {
             background: #f1f5f9;
-            padding: 12px 16px;
+            padding: 12px 14px;
             font-size: 12px;
             font-weight: 700;
             color: #334155;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 2px solid var(--border);
+            border-bottom: 1px solid var(--border);
         }
 
         table.custom-table td {
-            padding: 10px 16px;
+            padding: 10px 14px;
             border-bottom: 1px solid var(--border-light);
-            font-size: 13.5px;
+            font-size: 13px;
             vertical-align: middle;
         }
 
-        table.custom-table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
         table.custom-table tbody tr:hover {
-            background-color: #f8fafc;
+            background: #f8fafc;
         }
 
-        table.custom-table td input,
-        table.custom-table td select {
-            padding: 8px 10px;
-            font-size: 13px;
-        }
-
-        .col-metric {
-            width: 32%;
-        }
-
-        .col-rating {
-            width: 18%;
-        }
-
-        .col-remarks {
-            width: 50%;
-        }
-
-        .col-goal-title {
-            width: 25%;
-        }
-
-        .col-goal-target {
-            width: 35%;
-        }
-
-        .col-goal-date {
-            width: 20%;
-        }
-
-        .col-goal-status {
-            width: 20%;
-        }
-
-        .col-train-skill {
-            width: 35%;
-        }
-
-        .col-train-course {
-            width: 45%;
-        }
-
-        .col-train-priority {
-            width: 20%;
-        }
-
-        .area-name {
+        table.custom-table .area-name {
             font-weight: 600;
             color: #1e293b;
-        }
-
-        /* Rating Score Inputs & Spinner Fix */
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        input[type="number"] {
-            -moz-appearance: textfield;
-            appearance: textfield;
+            width: 28%;
         }
 
         .rating-input-box {
@@ -535,54 +643,19 @@
             gap: 6px;
         }
 
-        .rating-input-box input,
-        .calc-score {
-            width: 65px;
-            height: 38px;
-            padding: 4px 6px;
+        .rating-input-box input[type="number"] {
+            width: 70px;
             text-align: center;
             font-weight: 700;
-            font-size: 14px;
-            line-height: normal;
-            color: var(--primary);
-            box-sizing: border-box;
-        }
-
-        .pdf-rendered-score {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 65px;
-            height: 38px;
-            border: 1.5px solid #cbd5e1;
-            border-radius: var(--radius-sm);
-            background: #ffffff;
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--primary);
-            box-sizing: border-box;
-            text-align: center;
         }
 
         .rating-suffix {
-            color: #94a3b8;
             font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
         }
 
-        .avg-score-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #ecfdf5;
-            color: #065f46;
-            padding: 6px 14px;
-            border-radius: 999px;
-            font-weight: 700;
-            font-size: 13px;
-            border: 1px solid #a7f3d0;
-        }
-
-        /* Radio selection cards */
+        /* Radio group cards */
         .overall-radio-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -617,11 +690,19 @@
             letter-spacing: 0;
         }
 
-        .radio-card input[type="radio"]:checked+label {
+        .it-theme .radio-card input[type="radio"]:checked+label {
             background: #eff6ff;
             border-color: var(--accent);
             color: var(--primary);
             box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+            font-weight: 700;
+        }
+
+        .ops-theme .radio-card input[type="radio"]:checked+label {
+            background: #f0fdfa;
+            border-color: var(--ops-accent);
+            color: var(--ops-primary);
+            box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
             font-weight: 700;
         }
 
@@ -649,11 +730,18 @@
             background: #f1f5f9;
         }
 
-        .check-item input[type="checkbox"] {
+        .it-theme .check-item input[type="checkbox"] {
             width: 18px;
             height: 18px;
             cursor: pointer;
             accent-color: var(--accent);
+        }
+
+        .ops-theme .check-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--ops-accent);
         }
 
         .check-item span {
@@ -662,77 +750,114 @@
             color: #1e293b;
         }
 
-        /* CEO Signature Card */
-        .ceo-sig-wrapper {
+        /* Authorization & Signatures */
+        .sig-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .sig-wrapper.single {
+            grid-template-columns: 1fr;
             max-width: 600px;
             margin: 0 auto;
         }
 
-        .ceo-sig-card {
-            border: 1.5px solid var(--accent);
+        .sig-card {
             background: #ffffff;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
             border-radius: 10px;
             padding: 24px;
+            border: 1.5px solid var(--border);
         }
 
-        .ceo-header-row {
+        .it-theme .sig-card {
+            border-color: var(--accent-subtle);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.07);
+        }
+
+        .ops-theme .sig-card {
+            border-color: var(--ops-accent-subtle);
+            box-shadow: 0 4px 14px rgba(15, 118, 110, 0.07);
+        }
+
+        .sig-header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
-        .ceo-title-label {
-            color: var(--primary);
+        .sig-title-label {
             font-weight: 700;
             font-size: 13px;
             letter-spacing: 0.5px;
         }
 
-        .ceo-badge {
-            background: #eff6ff;
-            color: #1d4ed8;
+        .it-theme .sig-title-label {
+            color: var(--primary);
+        }
+
+        .ops-theme .sig-title-label {
+            color: var(--ops-primary);
+        }
+
+        .sig-badge {
             font-size: 11px;
             font-weight: 700;
             padding: 3px 10px;
             border-radius: 999px;
+        }
+
+        .it-theme .sig-badge {
+            background: #eff6ff;
+            color: #1d4ed8;
             border: 1px solid #bfdbfe;
         }
 
-        .ceo-field-group {
-            margin-bottom: 16px;
+        .ops-theme .sig-badge {
+            background: #f0fdfa;
+            color: #0f766e;
+            border: 1px solid #99f6e4;
         }
 
-        .ceo-sign-name-input {
-            font-weight: 700;
-            font-size: 14px;
-            color: #0f172a;
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            margin-top: 4px;
+        .sub-label {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 4px;
+            display: block;
         }
 
-        .ceo-preview-container {
-            border: 1.5px dashed #93c5fd;
-            background: #fafcff;
+        .preview-container {
             border-radius: 8px;
-            padding: 16px;
+            padding: 14px;
             margin: 6px 0 10px;
             text-align: center;
             position: relative;
         }
 
-        .ceo-img-wrap {
-            min-height: 90px;
+        .it-theme .preview-container {
+            border: 1.5px dashed #93c5fd;
+            background: #fafcff;
+        }
+
+        .ops-theme .preview-container {
+            border: 1.5px dashed #99f6e4;
+            background: #f0fdfa;
+        }
+
+        .sig-img-wrap {
+            min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .ceo-sig-image {
-            max-height: 85px;
-            max-width: 260px;
+        .sig-image {
+            max-height: 80px;
+            max-width: 240px;
             object-fit: contain;
             display: inline-block;
         }
@@ -748,53 +873,74 @@
         .sig-upload-controls {
             display: flex;
             gap: 10px;
-            justify-content: flex-end;
-            align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
         }
 
         .btn-upload-sig {
             padding: 7px 14px;
-            font-size: 12.5px;
+            font-size: 12px;
         }
 
         .btn-clear-sig {
             background: transparent;
-            border: none;
-            color: #64748b;
-            font-size: 11.5px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 7px 12px;
+            font-size: 12px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-weight: 600;
-            padding: 2px 8px;
+            transition: all 0.2s;
         }
 
         .btn-clear-sig:hover {
             color: var(--danger);
-            text-decoration: underline;
+            border-color: var(--danger);
         }
 
         .hidden-file-input {
             display: none;
         }
 
-        .ceo-date-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+        /* Buttons & Footer */
+        .btn-add-row {
+            border: 1px dashed;
+            padding: 7px 16px;
+            font-size: 12.5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.2s;
         }
 
-        .sub-label {
-            font-size: 11.5px;
-            color: #475569;
-            font-weight: 700;
+        .it-theme .btn-add-row {
+            background: #eff6ff;
+            color: var(--accent);
+            border-color: var(--accent);
         }
 
-        /* Form Bottom Controls */
+        .it-theme .btn-add-row:hover {
+            background: #dbeafe;
+        }
+
+        .ops-theme .btn-add-row {
+            background: #f0fdfa;
+            color: var(--ops-primary);
+            border-color: var(--ops-accent);
+        }
+
+        .ops-theme .btn-add-row:hover {
+            background: #ccfbf1;
+        }
+
         .form-footer-actions {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding-top: 25px;
+            justify-content: flex-end;
+            gap: 12px;
+            padding-top: 24px;
             border-top: 2px solid var(--border-light);
             margin-top: 30px;
         }
@@ -804,7 +950,7 @@
             font-size: 14px;
         }
 
-        /* Toast notifications */
+        /* Toast Notifications */
         .toast {
             position: fixed;
             bottom: 24px;
@@ -840,21 +986,51 @@
             border-left: 4px solid #60a5fa;
         }
 
-        /* Add row button */
-        .btn-add-row {
-            background: #eff6ff;
-            color: var(--accent);
-            border: 1px dashed var(--accent);
-            padding: 6px 14px;
-            font-size: 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-top: 8px;
+        .toast.toast-error {
+            background: #991b1b;
+            border-left: 4px solid #f87171;
         }
 
-        .btn-add-row:hover {
-            background: #dbeafe;
+        /* PDF export DOM replacers for clean multiline text wrapping */
+        .pdf-rendered-block {
+            display: block;
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: var(--radius-sm);
+            background: #ffffff;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-main);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            box-sizing: border-box;
+            min-height: 70px;
+        }
+
+        .pdf-rendered-inline {
+            display: block;
+            width: 100%;
+            padding: 8px 10px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: var(--radius-sm);
+            background: #ffffff;
+            font-size: 13px;
+            color: var(--text-main);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            box-sizing: border-box;
+        }
+
+        .pdf-rendered-score {
+            display: inline-block;
+            padding: 4px 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #0f172a;
         }
 
         /* Print & PDF Clean Styling */
@@ -867,7 +1043,8 @@
             }
 
             .top-nav,
-            .button-group,
+            .dept-switcher-card,
+            .form-footer-actions,
             .btn-clear-sig,
             .btn-add-row,
             .toast,
@@ -878,6 +1055,10 @@
             .form-card {
                 border: none;
                 box-shadow: none;
+            }
+
+            .form-card.hidden {
+                display: none !important;
             }
 
             .section {
@@ -897,7 +1078,6 @@
 
         .pdf-export-mode .doc-header {
             padding: 24px 30px !important;
-            background: #0f172a !important;
             color: #ffffff !important;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -909,9 +1089,6 @@
         }
 
         .pdf-export-mode .doc-tag {
-            color: #93c5fd !important;
-            background: rgba(255, 255, 255, 0.15) !important;
-            border: 1px solid rgba(255, 255, 255, 0.25) !important;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
@@ -945,10 +1122,11 @@
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 820px) {
 
             .grid-2,
             .grid-3,
+            .sig-wrapper,
             .rating-scale-grid,
             .overall-radio-grid,
             .checklist-grid {
@@ -963,7 +1141,6 @@
             .top-nav {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 12px;
             }
 
             .actions-group {
@@ -971,30 +1148,69 @@
                 justify-content: flex-start;
             }
 
+            .dept-switcher-card {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .switcher-tabs {
+                width: 100%;
+            }
+
+            .tab-btn {
+                flex: 1;
+                justify-content: center;
+            }
+
             .form-footer-actions {
                 flex-direction: column;
-                gap: 16px;
+                gap: 12px;
                 align-items: stretch;
             }
+        }
+
+        .w-130 {
+            width: 130px;
+        }
+
+        .w-140 {
+            width: 140px;
+        }
+
+        .mb-sm {
+            margin-bottom: 12px;
+        }
+
+        .mb-md {
+            margin-bottom: 14px;
+        }
+
+        .ceo-name-input {
+            font-weight: 700;
+            font-size: 14px;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
+    <main class="container" id="mainContainer">
         <!-- Sticky Action Header -->
-        <header class="top-nav" id="topNav">
+        <header class="top-nav" id="topNav" aria-label="Portal Navigation">
             <div class="brand-badge">
-                <div class="brand-icon">📋</div>
+                <div class="brand-icon" id="brandIcon">📋</div>
                 <div class="brand-text">
-                    <h2>Performance Review Portal</h2>
-                    <span>Fill information and download ready-to-sign PDF</span>
+                    <h2 id="portalTitle">Performance Review Portal</h2>
+                    <span id="portalSubtitle">Operations &amp; IT Team Evaluation &amp; Export</span>
                 </div>
             </div>
             <div class="actions-group">
                 <button type="button" class="btn btn-secondary" onclick="window.print()">
                     🖨️ Print Form
+                </button>
+                <button type="button" class="btn btn-excel" onclick="downloadExcel()">
+                    📊 Download Excel
                 </button>
                 <button type="button" class="btn btn-primary" id="btnDownloadPDF" onclick="downloadPDF()">
                     📄 Download PDF
@@ -1002,17 +1218,36 @@
             </div>
         </header>
 
-        <!-- Main Form Container -->
-        <main class="form-card" id="reviewDocument">
-            <!-- Document Header -->
-            <div class="doc-header">
-                <span class="doc-tag">Department of Information Technology • L&amp;D</span>
-                <h1>IT Team Performance Review Form</h1>
-                <p>Official periodic performance assessment, skill calibration, and career progression record.</p>
+        <!-- Department Switcher -->
+        <div class="dept-switcher-card">
+            <div class="switcher-label">
+                <span>Select Review Form:</span>
+            </div>
+            <div class="switcher-tabs">
+                <button type="button" class="tab-btn ops-tab active" id="tabBtnOps" onclick="switchDepartment('operations')">
+                    <span>🏢 Operations Team</span>
+                    <span class="tab-badge">Operations</span>
+                </button>
+                <button type="button" class="tab-btn it-tab" id="tabBtnIT" onclick="switchDepartment('it')">
+                    <span>💻 IT &amp; Engineering</span>
+                    <span class="tab-badge">IT</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ======================================================== -->
+        <!-- 1. OPERATIONS TEAM PERFORMANCE REVIEW FORM -->
+        <!-- ======================================================== -->
+        <section class="form-card ops-theme" id="operationsDocument" aria-labelledby="opsDocTitle">
+            <!-- Operations Header -->
+            <div class="doc-header ops-header">
+                <span class="doc-tag">Department of Operations • L&amp;D</span>
+                <h1 id="opsDocTitle">Operations Team Performance Review</h1>
+                <p>Learning &amp; Development | Operations Department Performance Calibration &amp; Progression Review</p>
             </div>
 
-            <!-- Form Content -->
-            <form id="performanceForm" class="form-body" onsubmit="event.preventDefault(); downloadPDF();">
+            <!-- Operations Form Content -->
+            <form id="operationsForm" class="form-body" onsubmit="event.preventDefault(); downloadPDF();">
 
                 <!-- Section 1: Employee Information -->
                 <section class="section">
@@ -1021,68 +1256,656 @@
                             <span class="section-num">01</span>
                             <div>
                                 <h3 class="section-title">Employee &amp; Review Information</h3>
-                                <p class="section-subtitle">Basic details of the employee under review</p>
+                                <p class="section-subtitle">Basic details of the operations team member under review</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="grid-2">
                         <div class="form-group">
-                            <label for="employeeName">Employee Full Name <span class="req">*</span></label>
-                            <input type="text" id="employeeName" name="employeeName" value="Maurya Ajay Munnalal"
+                            <label for="opsEmployeeName">Employee Name <span class="req">*</span></label>
+                            <input type="text" id="opsEmployeeName" name="opsEmployeeName" required
+                                placeholder="Enter employee full name" value="Pooja Sharma">
+                        </div>
+                        <div class="form-group">
+                            <label for="opsEmployeeId">Employee ID</label>
+                            <input type="text" id="opsEmployeeId" name="opsEmployeeId"
+                                placeholder="Enter employee ID" value="OPS-2026-114">
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="opsDepartment">Department</label>
+                            <input type="text" id="opsDepartment" name="opsDepartment" value="Operations"
+                                placeholder="Department name">
+                        </div>
+                        <div class="form-group">
+                            <label for="opsDesignation">Designation</label>
+                            <input type="text" id="opsDesignation" name="opsDesignation"
+                                placeholder="e.g. Operations Executive / Team Lead" value="Senior Operations Executive">
+                        </div>
+                    </div>
+
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label for="opsManager">Reporting Manager <span class="req">*</span></label>
+                            <input type="text" id="opsManager" name="opsManager" required
+                                placeholder="Enter manager name" value="Rajesh Verma">
+                        </div>
+                        <div class="form-group">
+                            <label for="opsReviewDate">Review Date</label>
+                            <input type="date" id="opsReviewDate" name="opsReviewDate" value="2026-09-15">
+                        </div>
+                        <div class="form-group">
+                            <label for="opsReviewPeriod">Review Period</label>
+                            <input type="text" id="opsReviewPeriod" name="opsReviewPeriod"
+                                placeholder="e.g., 01/01/2026 – 31/08/2026" value="01/01/2026 – 31/08/2026">
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="opsLdExecutive">L&amp;D Executive</label>
+                            <input type="text" id="opsLdExecutive" name="opsLdExecutive"
+                                placeholder="Enter L&D executive name" value="Swati Batabyal">
+                        </div>
+                        <div class="form-group">
+                            <label for="opsReviewCycle">Review Cycle</label>
+                            <select id="opsReviewCycle" name="opsReviewCycle">
+                                <option value="Monthly Review">Monthly Review</option>
+                                <option value="Quarterly Review" selected>Quarterly Review</option>
+                                <option value="Mid-Year Review">Mid-Year Review</option>
+                                <option value="Annual Appraisal">Annual Appraisal</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Rating Scale Reference -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">02</span>
+                            <div>
+                                <h3 class="section-title">Rating Scale Reference</h3>
+                                <p class="section-subtitle">Universal evaluation scale standard</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rating-scale-grid">
+                        <div class="scale-card">
+                            <span class="scale-val">5</span>
+                            <span class="scale-title">Exceptional</span>
+                            <span class="scale-desc">Consistently surpasses highest standards</span>
+                        </div>
+                        <div class="scale-card">
+                            <span class="scale-val">4</span>
+                            <span class="scale-title">Exceeds Expectations</span>
+                            <span class="scale-desc">Frequently goes beyond role demands</span>
+                        </div>
+                        <div class="scale-card">
+                            <span class="scale-val">3</span>
+                            <span class="scale-title">Meets Expectations</span>
+                            <span class="scale-desc">Consistently achieves core deliverables</span>
+                        </div>
+                        <div class="scale-card">
+                            <span class="scale-val">2</span>
+                            <span class="scale-title">Needs Improvement</span>
+                            <span class="scale-desc">Fails to meet expected benchmarks</span>
+                        </div>
+                        <div class="scale-card">
+                            <span class="scale-val">1</span>
+                            <span class="scale-title">Unsatisfactory</span>
+                            <span class="scale-desc">Critical performance deficiency</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Performance Evaluation -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">03</span>
+                            <div>
+                                <h3 class="section-title">Operations Performance Evaluation</h3>
+                                <p class="section-subtitle">Rate employee performance across key operational competencies (1.0 to 5.0)</p>
+                            </div>
+                        </div>
+                        <div id="opsLiveScoreBadge" class="avg-score-badge">
+                            Average Score: <strong>4.22 / 5.0</strong>
+                        </div>
+                    </div>
+
+                    <div class="eval-table-wrap">
+                        <table class="custom-table" id="opsEvalTable">
+                            <thead>
+                                <tr>
+                                    <th class="area-name">Performance Area</th>
+                                    <th class="w-130">Rating (1-5)</th>
+                                    <th>Evaluator Comments / Observations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="area-name">Quality of Work (Accuracy)</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ops" min="1" max="5" step="0.5" value="4.5" oninput="calculateOpsAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" value="High degree of accuracy in order processing and audits." placeholder="Comments"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Productivity</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ops" min="1" max="5" step="0.5" value="4.0" oninput="calculateOpsAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" value="Consistently completes 15% above the daily dispatch benchmark." placeholder="Comments"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Meeting Deadlines (TAT)</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ops" min="1" max="5" step="0.5" value="4.0" oninput="calculateOpsAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" value="Strict adherence to SLA Turn-Around-Time." placeholder="Comments"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Communication</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ops" min="1" max="5" step="0.5" value="4.5" oninput="calculateOpsAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" value="Clear status updates to warehouse coordinators and clients." placeholder="Comments"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Teamwork</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ops" min="1" max="5" step="0.5" value="5.0" oninput="calculateOpsAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" value="Always ready to step in during peak logistics surges." placeholder="Comments"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Process / SOP Understanding</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ops" min="1" max="5" step="0.5" value="4.0" oninput="calculateOpsAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" value="Sound knowledge of operational checklists and safety protocols." placeholder="Comments"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Attendance &amp; Punctuality</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ops" min="1" max="5" step="0.5" value="4.5" oninput="calculateOpsAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" value="Flawless attendance record with zero unplanned leaves." placeholder="Comments"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Initiative &amp; Ownership</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ops" min="1" max="5" step="0.5" value="4.0" oninput="calculateOpsAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" value="Introduced a digital reconciliation sheet that saved 3 hours weekly." placeholder="Comments"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Issue Resolution &amp; Follow-up</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ops" min="1" max="5" step="0.5" value="3.5" oninput="calculateOpsAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" value="Good troubleshooting; can improve on documenting post-incident logs." placeholder="Comments"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Section 4: Key Achievements -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">04</span>
+                            <div>
+                                <h3 class="section-title">Key Achievements</h3>
+                                <p class="section-subtitle">Major operational accomplishments during this review period</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="opsAchievements">Major Achievements <span class="req">*</span></label>
+                        <textarea id="opsAchievements" name="opsAchievements" required rows="3"
+                            placeholder="Enter key achievements...">• Successfully streamlined the dispatch verification pipeline, achieving 99.4% error-free fulfillment rate.
+• Spearheaded inventory reconciliation across 3 warehouse zones without downtime.
+• Mentored 2 junior operations trainees on compliance SOPs and inventory tracking.</textarea>
+                    </div>
+                </section>
+
+                <!-- Section 5: Areas for Improvement -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">05</span>
+                            <div>
+                                <h3 class="section-title">Areas for Improvement</h3>
+                                <p class="section-subtitle">Focus areas for operational excellence &amp; professional development</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="opsImprovements">Focus Areas for Development <span class="req">*</span></label>
+                        <textarea id="opsImprovements" name="opsImprovements" required rows="3"
+                            placeholder="Enter areas for improvement...">1. Enhance proactive escalation on supplier shipment delays before SLA impact.
+2. Advance data visualization skills (Excel dashboarding &amp; inventory analytics).
+3. Formulate root cause analysis (RCA) logs for vendor discrepancy tickets.</textarea>
+                    </div>
+                </section>
+
+                <!-- Section 6: Goals for Next Period -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">06</span>
+                            <div>
+                                <h3 class="section-title">Goals for Next Period</h3>
+                                <p class="section-subtitle">Key performance targets agreed upon for the upcoming review period</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="eval-table-wrap">
+                        <table class="custom-table" id="opsGoalsTable">
+                            <thead>
+                                <tr>
+                                    <th>Goal</th>
+                                    <th>Target</th>
+                                    <th>Deadline</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" value="Zero Misrouting Campaign" placeholder="Goal"></td>
+                                    <td><input type="text" value="Maintain dispatch error rate under 0.2%" placeholder="Target"></td>
+                                    <td><input type="date" value="2026-10-31"></td>
+                                    <td><input type="text" value="Planned" placeholder="Status"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" value="Warehouse Automation Integration" placeholder="Goal"></td>
+                                    <td><input type="text" value="Complete pilot run of RFID handheld scanner rollout" placeholder="Target"></td>
+                                    <td><input type="date" value="2026-11-15"></td>
+                                    <td><input type="text" value="In Progress" placeholder="Status"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" value="SOP Refresh &amp; Audit" placeholder="Goal"></td>
+                                    <td><input type="text" value="Update returns handling SOP and train cross-docking team" placeholder="Target"></td>
+                                    <td><input type="date" value="2026-12-05"></td>
+                                    <td><input type="text" value="Planned" placeholder="Status"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" class="btn-add-row" onclick="addOpsGoalRow()">+ Add Goal Row</button>
+                </section>
+
+                <!-- Section 7: Training Needs -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">07</span>
+                            <div>
+                                <h3 class="section-title">Training &amp; Development Needs</h3>
+                                <p class="section-subtitle">Identified certifications, workshops, or operational training</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="eval-table-wrap">
+                        <table class="custom-table" id="opsTrainingTable">
+                            <thead>
+                                <tr>
+                                    <th>Skill / Operational Area</th>
+                                    <th>Training Required</th>
+                                    <th class="w-140">Priority</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" value="Advanced Excel &amp; Operations Analytics" placeholder="Skill / Area"></td>
+                                    <td><input type="text" value="PivotTables, Power BI, and Supply Chain Dashboards" placeholder="Training needed"></td>
+                                    <td>
+                                        <select>
+                                            <option value="High" selected>High</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="Low">Low</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" value="Lean Six Sigma / 5S Methodology" placeholder="Skill / Area"></td>
+                                    <td><input type="text" value="Yellow Belt Process Optimization Workshop" placeholder="Training needed"></td>
+                                    <td>
+                                        <select>
+                                            <option value="High">High</option>
+                                            <option value="Medium" selected>Medium</option>
+                                            <option value="Low">Low</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" class="btn-add-row" onclick="addOpsTrainingRow()">+ Add Training Row</button>
+                </section>
+
+                <!-- Section 8 & 10: Comments -->
+                <div class="grid-2 section">
+                    <div>
+                        <div class="section-header">
+                            <div class="section-title-wrap">
+                                <span class="section-num">08</span>
+                                <div>
+                                    <h3 class="section-title">Employee Comments</h3>
+                                    <p class="section-subtitle">Feedback and self-reflection</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="opsEmployeeComments" name="opsEmployeeComments" rows="4"
+                                placeholder="Employee's feedback and comments...">I appreciate the team support during the quarterly distribution peak. Looking forward to attending the operational analytics training to further streamline our fulfillment reports.</textarea>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="section-header">
+                            <div class="section-title-wrap">
+                                <span class="section-num">09</span>
+                                <div>
+                                    <h3 class="section-title">Manager Comments</h3>
+                                    <p class="section-subtitle">Overall performance summary</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="opsManagerComments" name="opsManagerComments" rows="4" required
+                                placeholder="Enter manager comments...">Pooja is a reliable and proactive pillar of our operations squad. Her execution efficiency is admirable. With advanced dashboard training, she can take over independent shift leadership.</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 9: Overall Rating -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">10</span>
+                            <div>
+                                <h3 class="section-title">Overall Performance Rating</h3>
+                                <p class="section-subtitle">Consolidated operational review score</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overall-radio-grid">
+                        <div class="radio-card">
+                            <input type="radio" id="opsRate5" name="opsOverallRating" value="Exceptional">
+                            <label for="opsRate5">⭐ Exceptional</label>
+                        </div>
+                        <div class="radio-card">
+                            <input type="radio" id="opsRate4" name="opsOverallRating" value="Exceeds Expectations" checked>
+                            <label for="opsRate4">✨ Exceeds Expectations</label>
+                        </div>
+                        <div class="radio-card">
+                            <input type="radio" id="opsRate3" name="opsOverallRating" value="Meets Expectations">
+                            <label for="opsRate3">👍 Meets Expectations</label>
+                        </div>
+                        <div class="radio-card">
+                            <input type="radio" id="opsRate2" name="opsOverallRating" value="Needs Improvement">
+                            <label for="opsRate2">⚠️ Needs Improvement</label>
+                        </div>
+                        <div class="radio-card">
+                            <input type="radio" id="opsRate1" name="opsOverallRating" value="Unsatisfactory">
+                            <label for="opsRate1">❌ Unsatisfactory</label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 11: Final Actions -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">11</span>
+                            <div>
+                                <h3 class="section-title">Final Actions &amp; Recommendations</h3>
+                                <p class="section-subtitle">Select administrative / HR decisions</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checklist-grid">
+                        <label class="check-item">
+                            <input type="checkbox" id="opsAction1" name="opsAction_1" value="Continue in Current Role" checked>
+                            <span>Continue in Current Role</span>
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="opsAction2" name="opsAction_2" value="Salary Revision Recommended" checked>
+                            <span>Salary Revision Recommended</span>
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="opsAction3" name="opsAction_3" value="Promotion Recommended">
+                            <span>Promotion Recommended</span>
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="opsAction4" name="opsAction_4" value="Additional Training Required" checked>
+                            <span>Additional Training Required</span>
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="opsAction5" name="opsAction_5" value="Performance Improvement Plan Required">
+                            <span>Performance Improvement Plan Required</span>
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="opsAction6" name="opsAction_6" value="Role / Responsibility Change Recommended">
+                            <span>Role / Responsibility Change Recommended</span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Section 12: Signatures -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">12</span>
+                            <div>
+                                <h3 class="section-title">Authorization &amp; Signatures</h3>
+                                <p class="section-subtitle">Formal approvals and digital signature authorization</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sig-wrapper">
+                        <!-- Manager Authorization Card -->
+                        <div class="sig-card">
+                            <div class="sig-header-row">
+                                <label class="sig-title-label">Operations Manager Signature</label>
+                                <span class="sig-badge">Reporting Head</span>
+                            </div>
+                            <div class="form-group mb-sm">
+                                <label class="sub-label">Manager Name</label>
+                                <input type="text" id="opsManagerSignName" name="opsManagerSignName" value="Rajesh Verma" placeholder="Manager Name">
+                            </div>
+                            <label class="sub-label">Official Signature</label>
+                            <div class="preview-container">
+                                <div class="sig-img-wrap">
+                                    <img id="opsManagerSignImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Operations Manager Signature" class="sig-image">
+                                </div>
+                                <div id="opsManagerSigFile" class="sig-file-name"></div>
+                            </div>
+                            <div class="sig-upload-controls">
+                                <input type="file" id="opsManagerSignFile" accept="image/*" onchange="handleOpsSigUpload(event, 'manager')" class="hidden-file-input">
+                                <button type="button" class="btn btn-secondary btn-upload-sig" onclick="document.getElementById('opsManagerSignFile').click()">
+                                    📁 Upload Signature
+                                </button>
+                                <button type="button" class="btn-clear-sig" onclick="resetOpsSignature('manager')">
+                                    Reset
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label class="sub-label">Date</label>
+                                <input type="date" id="opsManagerSignDate" name="opsManagerSignDate" value="2026-09-16">
+                            </div>
+                        </div>
+
+                        <!-- Department Head / L&D Authorization Card -->
+                        <div class="sig-card">
+                            <div class="sig-header-row">
+                                <label class="sig-title-label">L&amp;D / Executive Authorization</label>
+                                <span class="sig-badge">Head of L&amp;D</span>
+                            </div>
+                            <div class="form-group mb-sm">
+                                <label class="sub-label">Executive Name</label>
+                                <input type="text" id="opsLdSignName" name="opsLdSignName" value="Sheetal Ma'am" placeholder="Executive Name">
+                            </div>
+                            <label class="sub-label">Official Signature</label>
+                            <div class="preview-container">
+                                <div class="sig-img-wrap">
+                                    <img id="opsLdSignImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="L&D Signature" class="sig-image">
+                                </div>
+                                <div id="opsLdSigFile" class="sig-file-name"></div>
+                            </div>
+                            <div class="sig-upload-controls">
+                                <input type="file" id="opsLdSignFile" accept="image/*" onchange="handleOpsSigUpload(event, 'ld')" class="hidden-file-input">
+                                <button type="button" class="btn btn-secondary btn-upload-sig" onclick="document.getElementById('opsLdSignFile').click()">
+                                    📁 Upload Signature
+                                </button>
+                                <button type="button" class="btn-clear-sig" onclick="resetOpsSignature('ld')">
+                                    Reset
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label class="sub-label">Date</label>
+                                <input type="date" id="opsLdSignDate" name="opsLdSignDate" value="2026-09-16">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Form Footer Actions -->
+                <div class="form-footer-actions">
+                    <button type="button" class="btn btn-secondary" onclick="resetCurrentForm()">
+                        🔄 Reset Form
+                    </button>
+                    <button type="submit" class="btn btn-ops-primary footer-submit-btn">
+                        📥 Save &amp; Download PDF
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- 2. IT TEAM PERFORMANCE REVIEW FORM -->
+        <!-- ======================================================== -->
+        <section class="form-card it-theme hidden" id="itDocument" aria-labelledby="itDocTitle">
+            <!-- IT Document Header -->
+            <div class="doc-header it-header">
+                <span class="doc-tag">Department of Information Technology • L&amp;D</span>
+                <h1 id="itDocTitle">IT Team Performance Review Form</h1>
+                <p>Official periodic performance assessment, technical calibration, and career progression record.</p>
+            </div>
+
+            <!-- IT Form Content -->
+            <form id="itPerformanceForm" class="form-body" onsubmit="event.preventDefault(); downloadPDF();">
+
+                <!-- Section 1: Employee Information -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">01</span>
+                            <div>
+                                <h3 class="section-title">Employee &amp; Review Information</h3>
+                                <p class="section-subtitle">Basic details of the IT employee under review</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="itEmployeeName">Employee Full Name <span class="req">*</span></label>
+                            <input type="text" id="itEmployeeName" name="itEmployeeName" value="Maurya Ajay Munnalal"
                                 required placeholder="Enter employee full name">
                         </div>
                         <div class="form-group">
-                            <label for="employeeId">Employee ID / Code</label>
-                            <input type="text" id="employeeId" name="employeeId" value="IT-2026-084"
+                            <label for="itEmployeeId">Employee ID / Code</label>
+                            <input type="text" id="itEmployeeId" name="itEmployeeId" value="IT-2026-084"
                                 placeholder="e.g. IT-1049">
                         </div>
                     </div>
 
                     <div class="grid-2">
                         <div class="form-group">
-                            <label for="department">Department / Team</label>
-                            <input type="text" id="department" name="department" value="TA &amp; Platform Engineering"
+                            <label for="itDepartment">Department / Team</label>
+                            <input type="text" id="itDepartment" name="itDepartment" value="TA &amp; Platform Engineering"
                                 placeholder="e.g. IT / Engineering">
                         </div>
                         <div class="form-group">
-                            <label for="designation">Designation / Role</label>
-                            <input type="text" id="designation" name="designation" value="IT Intern"
+                            <label for="itDesignation">Designation / Role</label>
+                            <input type="text" id="itDesignation" name="itDesignation" value="IT Intern"
                                 placeholder="e.g. Fullstack Developer / IT Intern">
                         </div>
                     </div>
 
                     <div class="grid-3">
                         <div class="form-group">
-                            <label for="manager">Reporting Manager <span class="req">*</span></label>
-                            <input type="text" id="manager" name="manager" value="Nabila Hussain" required
+                            <label for="itManager">Reporting Manager <span class="req">*</span></label>
+                            <input type="text" id="itManager" name="itManager" value="Nabila Hussain" required
                                 placeholder="Manager name">
                         </div>
                         <div class="form-group">
-                            <label for="reviewPeriod">Review Period</label>
-                            <input type="text" id="reviewPeriod" name="reviewPeriod" value="30/08/2026 – 12/09/2026"
+                            <label for="itReviewPeriod">Review Period</label>
+                            <input type="text" id="itReviewPeriod" name="itReviewPeriod" value="30/08/2026 – 12/09/2026"
                                 placeholder="DD/MM/YYYY - DD/MM/YYYY">
                         </div>
                         <div class="form-group">
-                            <label for="reviewDate">Review Date</label>
-                            <input type="date" id="reviewDate" name="reviewDate" value="2026-09-14">
+                            <label for="itReviewDate">Review Date</label>
+                            <input type="date" id="itReviewDate" name="itReviewDate" value="2026-09-14">
                         </div>
                     </div>
 
                     <div class="grid-2">
                         <div class="form-group">
-                            <label for="ldExecutive">L&amp;D / HR Executive</label>
-                            <input type="text" id="ldExecutive" name="ldExecutive" value="Swati Batabyal"
-                                placeholder="L&amp;D representative">
+                            <label for="itLdExecutive">L&amp;D / HR Executive</label>
+                            <input type="text" id="itLdExecutive" name="itLdExecutive" value="Swati Batabyal"
+                                placeholder="L&D representative">
                         </div>
                         <div class="form-group">
-                            <label for="reviewType">Review Cycle</label>
-                            <select id="reviewType" name="reviewType">
+                            <label for="itReviewType">Review Cycle</label>
+                            <select id="itReviewType" name="itReviewType">
                                 <option value="Bi-Weekly Review" selected>Bi-Weekly Review</option>
                                 <option value="Monthly Review">Monthly Review</option>
                                 <option value="Quarterly Review">Quarterly Review</option>
-                                <option value="Probation / Internship Completion">Probation / Internship Completion
-                                </option>
+                                <option value="Probation / Internship Completion">Probation / Internship Completion</option>
                                 <option value="Annual Appraisal">Annual Appraisal</option>
                             </select>
                         </div>
@@ -1140,18 +1963,18 @@
                                 <p class="section-subtitle">Rate individual competencies on scale of 1.0 to 5.0</p>
                             </div>
                         </div>
-                        <div id="liveScoreBadge" class="avg-score-badge">
+                        <div id="itLiveScoreBadge" class="avg-score-badge">
                             Average Score: <strong>3.78 / 5.0</strong>
                         </div>
                     </div>
 
                     <div class="eval-table-wrap">
-                        <table class="custom-table" id="evalTable">
+                        <table class="custom-table" id="itEvalTable">
                             <thead>
                                 <tr>
-                                    <th class="col-metric">Performance Metric</th>
-                                    <th class="col-rating">Rating (1-5)</th>
-                                    <th class="col-remarks">Evaluator Remarks / Justification</th>
+                                    <th class="area-name">Performance Metric</th>
+                                    <th class="w-130">Rating (1-5)</th>
+                                    <th>Evaluator Remarks / Justification</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1159,8 +1982,8 @@
                                     <td class="area-name">Quality of Portal / Application</td>
                                     <td>
                                         <div class="rating-input-box">
-                                            <input type="number" class="calc-score" min="1" max="5" step="0.5"
-                                                value="3.0" oninput="calculateAvgScore()">
+                                            <input type="number" class="calc-score-it" min="1" max="5" step="0.5"
+                                                value="3.0" oninput="calculateItAvgScore()">
                                             <span class="rating-suffix">/ 5</span>
                                         </div>
                                     </td>
@@ -1171,8 +1994,8 @@
                                     <td class="area-name">Productivity &amp; Output Volume</td>
                                     <td>
                                         <div class="rating-input-box">
-                                            <input type="number" class="calc-score" min="1" max="5" step="0.5"
-                                                value="4.0" oninput="calculateAvgScore()">
+                                            <input type="number" class="calc-score-it" min="1" max="5" step="0.5"
+                                                value="4.0" oninput="calculateItAvgScore()">
                                             <span class="rating-suffix">/ 5</span>
                                         </div>
                                     </td>
@@ -1184,8 +2007,8 @@
                                     <td class="area-name">Meeting Deadlines &amp; Timelines</td>
                                     <td>
                                         <div class="rating-input-box">
-                                            <input type="number" class="calc-score" min="1" max="5" step="0.5"
-                                                value="2.0" oninput="calculateAvgScore()">
+                                            <input type="number" class="calc-score-it" min="1" max="5" step="0.5"
+                                                value="2.0" oninput="calculateItAvgScore()">
                                             <span class="rating-suffix">/ 5</span>
                                         </div>
                                     </td>
@@ -1197,8 +2020,8 @@
                                     <td class="area-name">Communication &amp; Updates</td>
                                     <td>
                                         <div class="rating-input-box">
-                                            <input type="number" class="calc-score" min="1" max="5" step="0.5"
-                                                value="5.0" oninput="calculateAvgScore()">
+                                            <input type="number" class="calc-score-it" min="1" max="5" step="0.5"
+                                                value="5.0" oninput="calculateItAvgScore()">
                                             <span class="rating-suffix">/ 5</span>
                                         </div>
                                     </td>
@@ -1210,8 +2033,8 @@
                                     <td class="area-name">Teamwork &amp; Collaboration</td>
                                     <td>
                                         <div class="rating-input-box">
-                                            <input type="number" class="calc-score" min="1" max="5" step="0.5"
-                                                value="5.0" oninput="calculateAvgScore()">
+                                            <input type="number" class="calc-score-it" min="1" max="5" step="0.5"
+                                                value="5.0" oninput="calculateItAvgScore()">
                                             <span class="rating-suffix">/ 5</span>
                                         </div>
                                     </td>
@@ -1223,8 +2046,8 @@
                                     <td class="area-name">Portal &amp; System Understanding</td>
                                     <td>
                                         <div class="rating-input-box">
-                                            <input type="number" class="calc-score" min="1" max="5" step="0.5"
-                                                value="4.5" oninput="calculateAvgScore()">
+                                            <input type="number" class="calc-score-it" min="1" max="5" step="0.5"
+                                                value="4.5" oninput="calculateItAvgScore()">
                                             <span class="rating-suffix">/ 5</span>
                                         </div>
                                     </td>
@@ -1236,8 +2059,8 @@
                                     <td class="area-name">Attendance &amp; Punctuality</td>
                                     <td>
                                         <div class="rating-input-box">
-                                            <input type="number" class="calc-score" min="1" max="5" step="0.5"
-                                                value="3.5" oninput="calculateAvgScore()">
+                                            <input type="number" class="calc-score-it" min="1" max="5" step="0.5"
+                                                value="3.5" oninput="calculateItAvgScore()">
                                             <span class="rating-suffix">/ 5</span>
                                         </div>
                                     </td>
@@ -1248,8 +2071,8 @@
                                     <td class="area-name">Initiative &amp; Ownership</td>
                                     <td>
                                         <div class="rating-input-box">
-                                            <input type="number" class="calc-score" min="1" max="5" step="0.5"
-                                                value="5.0" oninput="calculateAvgScore()">
+                                            <input type="number" class="calc-score-it" min="1" max="5" step="0.5"
+                                                value="5.0" oninput="calculateItAvgScore()">
                                             <span class="rating-suffix">/ 5</span>
                                         </div>
                                     </td>
@@ -1261,8 +2084,8 @@
                                     <td class="area-name">Post-Launch Bugs &amp; Stability</td>
                                     <td>
                                         <div class="rating-input-box">
-                                            <input type="number" class="calc-score" min="1" max="5" step="0.5"
-                                                value="2.0" oninput="calculateAvgScore()">
+                                            <input type="number" class="calc-score-it" min="1" max="5" step="0.5"
+                                                value="2.0" oninput="calculateItAvgScore()">
                                             <span class="rating-suffix">/ 5</span>
                                         </div>
                                     </td>
@@ -1288,8 +2111,8 @@
                     </div>
 
                     <div class="form-group full">
-                        <label for="achievements">Key Accomplishments <span class="req">*</span></label>
-                        <textarea id="achievements" name="achievements" required rows="3"
+                        <label for="itAchievements">Key Accomplishments <span class="req">*</span></label>
+                        <textarea id="itAchievements" name="itAchievements" required rows="3"
                             placeholder="List tangible accomplishments...">• Achieved milestone target and launched the ATS evaluator module ahead of quarterly showcase.
 • Demonstrated strong technical ownership with the engineering team, reducing backlog tickets by 30%.</textarea>
                     </div>
@@ -1302,14 +2125,14 @@
                             <span class="section-num">05</span>
                             <div>
                                 <h3 class="section-title">Areas for Development &amp; Improvement</h3>
-                                <p class="section-subtitle">Constructive action points to elevate performance</p>
+                                <p class="section-subtitle">Constructive action points to elevate technical performance</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group full">
-                        <label for="improvements">Focus Areas for Professional Growth <span class="req">*</span></label>
-                        <textarea id="improvements" name="improvements" required rows="3"
+                        <label for="itImprovements">Focus Areas for Professional Growth <span class="req">*</span></label>
+                        <textarea id="itImprovements" name="itImprovements" required rows="3"
                             placeholder="Specify developmental targets...">1. Meet committed sprint deadlines consistently by breaking complex stories into manageable micro-tasks.
 2. Implement pre-deployment test cases and rigorous QA before production portal release to cut post-launch defects.
 3. Continually synchronize dependencies across cross-functional squad members.</textarea>
@@ -1329,34 +2152,32 @@
                     </div>
 
                     <div class="eval-table-wrap">
-                        <table class="custom-table" id="goalsTable">
+                        <table class="custom-table" id="itGoalsTable">
                             <thead>
                                 <tr>
-                                    <th class="col-goal-title">Goal Objective</th>
-                                    <th class="col-goal-target">Key Result / Target</th>
-                                    <th class="col-goal-date">Target Deadline</th>
-                                    <th class="col-goal-status">Status</th>
+                                    <th>Goal Objective</th>
+                                    <th>Key Result / Target</th>
+                                    <th>Target Deadline</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td><input type="text" value="HRMS Core Upgrade"></td>
-                                    <td><input type="text" value="Complete employee leave and attendance module APIs">
-                                    </td>
+                                    <td><input type="text" value="Complete employee leave and attendance module APIs"></td>
                                     <td><input type="date" value="2026-09-25"></td>
                                     <td><input type="text" value="In Progress"></td>
                                 </tr>
                                 <tr>
                                     <td><input type="text" value="Zero Critical Bug Policy"></td>
-                                    <td><input type="text"
-                                            value="Unit test coverage &gt; 80% for ATS evaluation backend"></td>
+                                    <td><input type="text" value="Unit test coverage &gt; 80% for ATS evaluation backend"></td>
                                     <td><input type="date" value="2026-10-05"></td>
                                     <td><input type="text" value="Planned"></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <button type="button" class="btn-add-row" onclick="addGoalRow()">+ Add Goal Row</button>
+                    <button type="button" class="btn-add-row" onclick="addItGoalRow()">+ Add Goal Row</button>
                 </section>
 
                 <!-- Section 7: Training Needs -->
@@ -1366,18 +2187,18 @@
                             <span class="section-num">07</span>
                             <div>
                                 <h3 class="section-title">Training &amp; Skill Development Needs</h3>
-                                <p class="section-subtitle">Identified certifications, mentorship or courses</p>
+                                <p class="section-subtitle">Identified certifications, mentorship or engineering workshops</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="eval-table-wrap">
-                        <table class="custom-table" id="trainingTable">
+                        <table class="custom-table" id="itTrainingTable">
                             <thead>
                                 <tr>
-                                    <th class="col-train-skill">Skill / Domain</th>
-                                    <th class="col-train-course">Recommended Training / Course</th>
-                                    <th class="col-train-priority">Priority</th>
+                                    <th>Skill / Domain</th>
+                                    <th>Recommended Training / Course</th>
+                                    <th class="w-140">Priority</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1395,6 +2216,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <button type="button" class="btn-add-row" onclick="addItTrainingRow()">+ Add Training Row</button>
                 </section>
 
                 <!-- Section 8 & 9: Comments -->
@@ -1410,7 +2232,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <textarea id="employeeComments" name="employeeComments" rows="4"
+                            <textarea id="itEmployeeComments" name="itEmployeeComments" rows="4"
                                 placeholder="Employee reflections...">I am actively prioritizing QA testing cycles to prevent regression bugs in upcoming releases. Grateful for the mentorship provided by the senior engineering lead.</textarea>
                         </div>
                     </div>
@@ -1426,7 +2248,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <textarea id="managerComments" name="managerComments" rows="4" required
+                            <textarea id="itManagerComments" name="itManagerComments" rows="4" required
                                 placeholder="Manager appraisal...">Ajay demonstrates stellar ownership and initiative. His technical grasping power is commendable. Once he tightens deadline forecasting and staging QA, he is poised to assume higher leadership responsibilities.</textarea>
                         </div>
                     </div>
@@ -1446,24 +2268,24 @@
 
                     <div class="overall-radio-grid">
                         <div class="radio-card">
-                            <input type="radio" id="rate5" name="overallRating" value="Exceptional">
-                            <label for="rate5">⭐ Exceptional</label>
+                            <input type="radio" id="itRate5" name="itOverallRating" value="Exceptional">
+                            <label for="itRate5">⭐ Exceptional</label>
                         </div>
                         <div class="radio-card">
-                            <input type="radio" id="rate4" name="overallRating" value="Exceeds Expectations" checked>
-                            <label for="rate4">✨ Exceeds Expectations</label>
+                            <input type="radio" id="itRate4" name="itOverallRating" value="Exceeds Expectations" checked>
+                            <label for="itRate4">✨ Exceeds Expectations</label>
                         </div>
                         <div class="radio-card">
-                            <input type="radio" id="rate3" name="overallRating" value="Meets Expectations">
-                            <label for="rate3">👍 Meets Expectations</label>
+                            <input type="radio" id="itRate3" name="itOverallRating" value="Meets Expectations">
+                            <label for="itRate3">👍 Meets Expectations</label>
                         </div>
                         <div class="radio-card">
-                            <input type="radio" id="rate2" name="overallRating" value="Needs Improvement">
-                            <label for="rate2">⚠️ Needs Improvement</label>
+                            <input type="radio" id="itRate2" name="itOverallRating" value="Needs Improvement">
+                            <label for="itRate2">⚠️ Needs Improvement</label>
                         </div>
                         <div class="radio-card">
-                            <input type="radio" id="rate1" name="overallRating" value="Unsatisfactory">
-                            <label for="rate1">❌ Unsatisfactory</label>
+                            <input type="radio" id="itRate1" name="itOverallRating" value="Unsatisfactory">
+                            <label for="itRate1">❌ Unsatisfactory</label>
                         </div>
                     </div>
                 </section>
@@ -1482,33 +2304,27 @@
 
                     <div class="checklist-grid">
                         <label class="check-item">
-                            <input type="checkbox" id="action1" name="adminAction_1" value="Continue in Current Role"
-                                checked>
+                            <input type="checkbox" id="itAction1" name="itAdminAction_1" value="Continue in Current Role" checked>
                             <span>Continue in Current Role</span>
                         </label>
                         <label class="check-item">
-                            <input type="checkbox" id="action2" name="adminAction_2"
-                                value="Salary Revision Recommended">
+                            <input type="checkbox" id="itAction2" name="itAdminAction_2" value="Salary Revision Recommended">
                             <span>Salary Revision Recommended</span>
                         </label>
                         <label class="check-item">
-                            <input type="checkbox" id="action3" name="adminAction_3"
-                                value="Promotion / Role Advancement Recommended">
+                            <input type="checkbox" id="itAction3" name="itAdminAction_3" value="Promotion / Role Advancement Recommended">
                             <span>Promotion / Role Advancement Recommended</span>
                         </label>
                         <label class="check-item">
-                            <input type="checkbox" id="action4" name="adminAction_4"
-                                value="Enroll in Advanced Technical Training" checked>
+                            <input type="checkbox" id="itAction4" name="itAdminAction_4" value="Enroll in Advanced Technical Training" checked>
                             <span>Enroll in Advanced Technical Training</span>
                         </label>
                         <label class="check-item">
-                            <input type="checkbox" id="action5" name="adminAction_5"
-                                value="Formal Performance Improvement Plan (PIP)">
+                            <input type="checkbox" id="itAction5" name="itAdminAction_5" value="Formal Performance Improvement Plan (PIP)">
                             <span>Formal Performance Improvement Plan (PIP)</span>
                         </label>
                         <label class="check-item">
-                            <input type="checkbox" id="action6" name="adminAction_6"
-                                value="Expansion of Ownership Scope" checked>
+                            <input type="checkbox" id="itAction6" name="itAdminAction_6" value="Expansion of Ownership Scope" checked>
                             <span>Expansion of Ownership Scope</span>
                         </label>
                     </div>
@@ -1521,54 +2337,52 @@
                             <span class="section-num">12</span>
                             <div>
                                 <h3 class="section-title">CEO Approval &amp; Final Authorization</h3>
-                                <p class="section-subtitle">Executive authorization, signature file upload, and approval
-                                    date</p>
+                                <p class="section-subtitle">Executive authorization, signature file upload, and approval date</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="ceo-sig-wrapper">
-                        <div class="sig-box ceo-sig-card">
-                            <div class="ceo-header-row">
-                                <label class="ceo-title-label">CEO Authorization</label>
-                                <span class="ceo-badge">Chief Executive Officer</span>
+                    <div class="sig-wrapper single">
+                        <div class="sig-card">
+                            <div class="sig-header-row">
+                                <label class="sig-title-label">CEO Authorization</label>
+                                <span class="sig-badge">Chief Executive Officer</span>
                             </div>
 
-                            <div class="form-group ceo-field-group">
+                            <div class="form-group mb-md">
                                 <label class="sub-label">Authorized Signatory Name</label>
-                                <input type="text" id="ceoSignName" name="ceoSignName" value="Sheetal Ma'am"
-                                    placeholder="CEO Name" class="ceo-sign-name-input">
+                                <input type="text" id="itCeoSignName" name="itCeoSignName" value="Sheetal Ma'am"
+                                    placeholder="CEO Name" class="ceo-name-input">
                             </div>
 
                             <label class="sub-label">CEO Official Signature</label>
 
-                            <!-- Signature Image Display & Upload Container -->
-                            <div id="ceoSignPreviewContainer" class="ceo-preview-container">
-                                <div class="ceo-img-wrap">
-                                    <img id="ceoSignImage"
-                                        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                                        alt="CEO Signature" class="ceo-sig-image">
+                            <!-- Signature Image Display -->
+                            <div class="preview-container">
+                                <div class="sig-img-wrap">
+                                    <img id="itCeoSignImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                                        alt="CEO Signature" class="sig-image">
                                 </div>
-                                <div id="sigFileName" class="sig-file-name"></div>
+                                <div id="itSigFileName" class="sig-file-name"></div>
                             </div>
 
-                            <!-- Upload Controls (Hidden on PDF) -->
+                            <!-- Upload Controls -->
                             <div class="sig-upload-controls">
-                                <input type="file" id="ceoSignFileInput"
+                                <input type="file" id="itCeoSignFileInput"
                                     accept="image/png, image/jpeg, image/jpg, image/webp"
-                                    onchange="handleSignatureFileUpload(event)" class="hidden-file-input">
+                                    onchange="handleItSignatureFileUpload(event)" class="hidden-file-input">
                                 <button type="button" class="btn btn-secondary btn-upload-sig"
-                                    onclick="document.getElementById('ceoSignFileInput').click()">
+                                    onclick="document.getElementById('itCeoSignFileInput').click()">
                                     📁 Upload Signature File
                                 </button>
-                                <button type="button" class="btn-clear-sig" onclick="resetDefaultSignature()">
+                                <button type="button" class="btn-clear-sig" onclick="resetItDefaultSignature()">
                                     Reset to Default
                                 </button>
                             </div>
 
-                            <div class="ceo-date-group">
+                            <div class="form-group">
                                 <label class="sub-label">Authorization Date</label>
-                                <input type="date" id="ceoSignDate" name="ceoSignDate" value="2026-09-16">
+                                <input type="date" id="itCeoSignDate" name="itCeoSignDate" value="2026-09-16">
                             </div>
                         </div>
                     </div>
@@ -1576,7 +2390,7 @@
 
                 <!-- Form Footer Actions -->
                 <div class="form-footer-actions">
-                    <button type="button" class="btn btn-secondary" onclick="resetFormToDefaults()">
+                    <button type="button" class="btn btn-secondary" onclick="resetCurrentForm()">
                         🔄 Reset Form
                     </button>
                     <button type="submit" class="btn btn-primary footer-submit-btn">
@@ -1585,8 +2399,8 @@
                 </div>
 
             </form>
-        </main>
-    </div>
+        </section>
+    </main>
 
     <!-- Notification Toast -->
     <div id="toast" class="toast">
@@ -1596,19 +2410,73 @@
 
     <script>
         // ==========================================
-        // 1. Signature File Upload Implementation
+        // 1. Department Switcher State & Handlers
         // ==========================================
-        function createDefaultSignaturePNG() {
+        let currentDepartment = 'operations'; // 'operations' or 'it'
+
+        function switchDepartment(dept) {
+            currentDepartment = dept;
+            const opsDoc = document.getElementById('operationsDocument');
+            const itDoc = document.getElementById('itDocument');
+            const tabOps = document.getElementById('tabBtnOps');
+            const tabIt = document.getElementById('tabBtnIT');
+            const brandIcon = document.getElementById('brandIcon');
+            const portalSubtitle = document.getElementById('portalSubtitle');
+            const btnDownload = document.getElementById('btnDownloadPDF');
+
+            if (dept === 'operations') {
+                opsDoc.classList.remove('hidden');
+                itDoc.classList.add('hidden');
+                tabOps.classList.add('active');
+                tabIt.classList.remove('active');
+                brandIcon.textContent = '🏢';
+                brandIcon.style.background = 'linear-gradient(135deg, #0f766e, #14b8a6)';
+                portalSubtitle.textContent = 'Operations Team Performance Evaluation & Export';
+                btnDownload.className = 'btn btn-ops-primary';
+                location.hash = 'operations';
+            } else {
+                opsDoc.classList.add('hidden');
+                itDoc.classList.remove('hidden');
+                tabOps.classList.remove('active');
+                tabIt.classList.add('active');
+                brandIcon.textContent = '💻';
+                brandIcon.style.background = 'linear-gradient(135deg, #1e3a8a, #2563eb)';
+                portalSubtitle.textContent = 'Information Technology Performance Evaluation & Export';
+                btnDownload.className = 'btn btn-primary';
+                location.hash = 'it';
+            }
+
+            // Smooth scroll to top of form
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Check URL hash on initial load
+        window.addEventListener('DOMContentLoaded', () => {
+            const hash = window.location.hash.replace('#', '').toLowerCase();
+            if (hash === 'it') {
+                switchDepartment('it');
+            } else {
+                switchDepartment('operations');
+            }
+            initDefaultSignatures();
+            calculateOpsAvgScore();
+            calculateItAvgScore();
+        });
+
+        // ==========================================
+        // 2. Signatures Implementation
+        // ==========================================
+        function createSignaturePNG(nameText = "Sheetal", strokeColor = "#1e3a8a") {
             const c = document.createElement('canvas');
-            c.width = 320;
+            c.width = 340;
             c.height = 100;
             const ctx = c.getContext('2d');
             ctx.lineWidth = 2.4;
-            ctx.strokeStyle = '#1e3a8a';
+            ctx.strokeStyle = strokeColor;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
 
-            // Cursive signature strokes for Sheetal Ma'am
+            // Cursive signature strokes
             ctx.beginPath();
             ctx.moveTo(35, 65);
             ctx.bezierCurveTo(65, 20, 100, 20, 120, 50);
@@ -1627,66 +2495,100 @@
             return c.toDataURL('image/png');
         }
 
-        let defaultSignatureURL = null;
+        let defaultItSigURL = null;
+        let defaultOpsMgrSigURL = null;
+        let defaultOpsLdSigURL = null;
 
-        function initSignature() {
-            if (!defaultSignatureURL) {
-                defaultSignatureURL = createDefaultSignaturePNG();
-            }
-            const sigImg = document.getElementById('ceoSignImage');
-            if (sigImg) {
-                sigImg.src = defaultSignatureURL;
-            }
+        function initDefaultSignatures() {
+            if (!defaultItSigURL) defaultItSigURL = createSignaturePNG("Sheetal", "#1e3a8a");
+            if (!defaultOpsMgrSigURL) defaultOpsMgrSigURL = createSignaturePNG("Rajesh", "#0f766e");
+            if (!defaultOpsLdSigURL) defaultOpsLdSigURL = createSignaturePNG("Sheetal", "#0f766e");
+
+            const itImg = document.getElementById('itCeoSignImage');
+            if (itImg && itImg.src.includes('R0lGODlhAQAB')) itImg.src = defaultItSigURL;
+
+            const opsMgrImg = document.getElementById('opsManagerSignImg');
+            if (opsMgrImg && opsMgrImg.src.includes('R0lGODlhAQAB')) opsMgrImg.src = defaultOpsMgrSigURL;
+
+            const opsLdImg = document.getElementById('opsLdSignImg');
+            if (opsLdImg && opsLdImg.src.includes('R0lGODlhAQAB')) opsLdImg.src = defaultOpsLdSigURL;
         }
 
-        function handleSignatureFileUpload(event) {
+        // IT Signature Handlers
+        function handleItSignatureFileUpload(event) {
             const file = event.target.files[0];
             if (file) {
                 if (!file.type.startsWith('image/')) {
-                    alert('Please select a valid image file (PNG, JPG, etc.)');
+                    alert('Please select a valid image file');
                     return;
                 }
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    const sigImg = document.getElementById('ceoSignImage');
-                    sigImg.src = e.target.result;
-                    const fileNameEl = document.getElementById('sigFileName');
+                    document.getElementById('itCeoSignImage').src = e.target.result;
+                    const fileNameEl = document.getElementById('itSigFileName');
                     fileNameEl.textContent = 'Uploaded: ' + file.name;
                     fileNameEl.style.display = 'block';
-                    showToast('Signature file attached successfully!', 'success', 2500);
+                    showToast('CEO Signature attached!', 'success', 2500);
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        function resetDefaultSignature() {
-            if (!defaultSignatureURL) {
-                defaultSignatureURL = createDefaultSignaturePNG();
-            }
-            const sigImg = document.getElementById('ceoSignImage');
-            if (sigImg) {
-                sigImg.src = defaultSignatureURL;
-            }
-            const fileInput = document.getElementById('ceoSignFileInput');
+        function resetItDefaultSignature() {
+            document.getElementById('itCeoSignImage').src = defaultItSigURL;
+            const fileInput = document.getElementById('itCeoSignFileInput');
             if (fileInput) fileInput.value = '';
-            const fileNameEl = document.getElementById('sigFileName');
-            if (fileNameEl) {
-                fileNameEl.textContent = '';
-                fileNameEl.style.display = 'none';
+            const fileNameEl = document.getElementById('itSigFileName');
+            if (fileNameEl) fileNameEl.style.display = 'none';
+            showToast('IT Signature reset to default', 'loading', 2000);
+        }
+
+        // Operations Signature Handlers
+        function handleOpsSigUpload(event, type) {
+            const file = event.target.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select a valid image file');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    if (type === 'manager') {
+                        document.getElementById('opsManagerSignImg').src = e.target.result;
+                        const fn = document.getElementById('opsManagerSigFile');
+                        fn.textContent = 'Uploaded: ' + file.name;
+                        fn.style.display = 'block';
+                    } else {
+                        document.getElementById('opsLdSignImg').src = e.target.result;
+                        const fn = document.getElementById('opsLdSigFile');
+                        fn.textContent = 'Uploaded: ' + file.name;
+                        fn.style.display = 'block';
+                    }
+                    showToast('Signature attached!', 'success', 2500);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function resetOpsSignature(type) {
+            if (type === 'manager') {
+                document.getElementById('opsManagerSignImg').src = defaultOpsMgrSigURL;
+                document.getElementById('opsManagerSignFile').value = '';
+                document.getElementById('opsManagerSigFile').style.display = 'none';
+            } else {
+                document.getElementById('opsLdSignImg').src = defaultOpsLdSigURL;
+                document.getElementById('opsLdSignFile').value = '';
+                document.getElementById('opsLdSigFile').style.display = 'none';
             }
             showToast('Signature reset to default', 'loading', 2000);
         }
 
-        // Initialize default signature image
-        initSignature();
-
         // ==========================================
-        // 2. Score Calculation
+        // 3. Score Calculations
         // ==========================================
-        function calculateAvgScore() {
-            const scores = document.querySelectorAll('.calc-score');
-            let sum = 0;
-            let count = 0;
+        function calculateOpsAvgScore() {
+            const scores = document.querySelectorAll('.calc-score-ops');
+            let sum = 0, count = 0;
             scores.forEach(inp => {
                 const val = parseFloat(inp.value);
                 if (!isNaN(val) && val >= 1 && val <= 5) {
@@ -1694,20 +2596,61 @@
                     count++;
                 }
             });
-
             if (count > 0) {
                 const avg = (sum / count).toFixed(2);
-                const badge = document.getElementById('liveScoreBadge');
-                badge.innerHTML = `Average Score: <strong>${avg} / 5.0</strong>`;
+                document.getElementById('opsLiveScoreBadge').innerHTML = `Average Score: <strong>${avg} / 5.0</strong>`;
+            }
+        }
+
+        function calculateItAvgScore() {
+            const scores = document.querySelectorAll('.calc-score-it');
+            let sum = 0, count = 0;
+            scores.forEach(inp => {
+                const val = parseFloat(inp.value);
+                if (!isNaN(val) && val >= 1 && val <= 5) {
+                    sum += val;
+                    count++;
+                }
+            });
+            if (count > 0) {
+                const avg = (sum / count).toFixed(2);
+                document.getElementById('itLiveScoreBadge').innerHTML = `Average Score: <strong>${avg} / 5.0</strong>`;
             }
         }
 
         // ==========================================
-        // 3. Dynamic Rows
+        // 4. Dynamic Rows
         // ==========================================
-        function addGoalRow() {
-            const table = document.getElementById('goalsTable').getElementsByTagName('tbody')[0];
-            const newRow = table.insertRow();
+        function addOpsGoalRow() {
+            const tbody = document.getElementById('opsGoalsTable').getElementsByTagName('tbody')[0];
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="Goal title"></td>
+                <td><input type="text" placeholder="Target deliverable"></td>
+                <td><input type="date"></td>
+                <td><input type="text" value="Planned" placeholder="Status"></td>
+            `;
+        }
+
+        function addOpsTrainingRow() {
+            const tbody = document.getElementById('opsTrainingTable').getElementsByTagName('tbody')[0];
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="Skill / Operational Area"></td>
+                <td><input type="text" placeholder="Training needed"></td>
+                <td>
+                    <select>
+                        <option value="High">High</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </td>
+            `;
+        }
+
+        function addItGoalRow() {
+            const tbody = document.getElementById('itGoalsTable').getElementsByTagName('tbody')[0];
+            const newRow = tbody.insertRow();
             newRow.innerHTML = `
                 <td><input type="text" placeholder="Goal title"></td>
                 <td><input type="text" placeholder="Key target metric"></td>
@@ -1716,8 +2659,24 @@
             `;
         }
 
+        function addItTrainingRow() {
+            const tbody = document.getElementById('itTrainingTable').getElementsByTagName('tbody')[0];
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="Skill / Domain"></td>
+                <td><input type="text" placeholder="Recommended training"></td>
+                <td>
+                    <select>
+                        <option value="High">High</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </td>
+            `;
+        }
+
         // ==========================================
-        // 4. Toast Notification
+        // 5. Toast Notification
         // ==========================================
         function showToast(text, type = 'loading', duration = 3000) {
             const toast = document.getElementById('toast');
@@ -1731,6 +2690,8 @@
                 toastIcon.textContent = '⏳';
             } else if (type === 'success') {
                 toastIcon.textContent = '✅';
+            } else if (type === 'error') {
+                toastIcon.textContent = '⚠️';
             } else {
                 toastIcon.textContent = 'ℹ️';
             }
@@ -1743,10 +2704,93 @@
         }
 
         // ==========================================
-        // 5. High-Fidelity Multi-Page PDF Generation
+        // 6. Reset Active Form
+        // ==========================================
+        function resetCurrentForm() {
+            const formId = currentDepartment === 'operations' ? 'operationsForm' : 'itPerformanceForm';
+            if (confirm(`Are you sure you want to reset all fields in the ${currentDepartment.toUpperCase()} form?`)) {
+                document.getElementById(formId).reset();
+                if (currentDepartment === 'operations') {
+                    resetOpsSignature('manager');
+                    resetOpsSignature('ld');
+                    calculateOpsAvgScore();
+                } else {
+                    resetItDefaultSignature();
+                    calculateItAvgScore();
+                }
+                showToast('Form reset to default values', 'loading', 2000);
+            }
+        }
+
+        // ==========================================
+        // 7. Download Excel Implementation
+        // ==========================================
+        function downloadExcel() {
+            const isOps = currentDepartment === 'operations';
+            const form = document.getElementById(isOps ? 'operationsForm' : 'itPerformanceForm');
+            const empName = (document.getElementById(isOps ? 'opsEmployeeName' : 'itEmployeeName').value || 'Employee').trim();
+            const deptName = isOps ? 'Operations' : 'IT';
+
+            showToast(`Generating ${deptName} Excel report...`, 'loading', 1500);
+
+            const formData = new FormData(form);
+            const reviewData = [];
+
+            reviewData.push({ 'Category': 'Department', 'Detail': deptName });
+            reviewData.push({ 'Category': 'Employee Name', 'Detail': empName });
+            reviewData.push({ 'Category': 'Employee ID', 'Detail': document.getElementById(isOps ? 'opsEmployeeId' : 'itEmployeeId')?.value || '' });
+            reviewData.push({ 'Category': 'Designation', 'Detail': document.getElementById(isOps ? 'opsDesignation' : 'itDesignation')?.value || '' });
+            reviewData.push({ 'Category': 'Reporting Manager', 'Detail': document.getElementById(isOps ? 'opsManager' : 'itManager')?.value || '' });
+            reviewData.push({ 'Category': 'Review Date', 'Detail': document.getElementById(isOps ? 'opsReviewDate' : 'itReviewDate')?.value || '' });
+            reviewData.push({ 'Category': 'Review Period', 'Detail': document.getElementById(isOps ? 'opsReviewPeriod' : 'itReviewPeriod')?.value || '' });
+            reviewData.push({ 'Category': 'L&D Executive', 'Detail': document.getElementById(isOps ? 'opsLdExecutive' : 'itLdExecutive')?.value || '' });
+
+            // Achievements & Improvements
+            reviewData.push({ 'Category': 'Key Achievements', 'Detail': document.getElementById(isOps ? 'opsAchievements' : 'itAchievements')?.value || '' });
+            reviewData.push({ 'Category': 'Areas for Improvement', 'Detail': document.getElementById(isOps ? 'opsImprovements' : 'itImprovements')?.value || '' });
+
+            // Comments
+            reviewData.push({ 'Category': 'Employee Comments', 'Detail': document.getElementById(isOps ? 'opsEmployeeComments' : 'itEmployeeComments')?.value || '' });
+            reviewData.push({ 'Category': 'Manager Comments', 'Detail': document.getElementById(isOps ? 'opsManagerComments' : 'itManagerComments')?.value || '' });
+
+            // Overall rating
+            const checkedRating = form.querySelector('input[type="radio"]:checked');
+            reviewData.push({ 'Category': 'Overall Determination', 'Detail': checkedRating ? checkedRating.value : 'Meets Expectations' });
+
+            // Final actions
+            const checkedActions = [];
+            form.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => checkedActions.push(cb.value));
+            reviewData.push({ 'Category': 'Recommended Actions', 'Detail': checkedActions.join('; ') });
+
+            // Create Workbook & Sheets
+            const wb = XLSX.utils.book_new();
+            const wsSummary = XLSX.utils.json_to_sheet(reviewData);
+            XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
+
+            // Competencies Sheet
+            const evalTableId = isOps ? 'opsEvalTable' : 'itEvalTable';
+            const evalRows = [];
+            document.querySelectorAll(`#${evalTableId} tbody tr`).forEach(tr => {
+                const metric = tr.querySelector('.area-name')?.textContent?.trim() || '';
+                const rating = tr.querySelector('input[type="number"]')?.value || '';
+                const comment = tr.querySelector('input[type="text"]')?.value || '';
+                evalRows.push({ 'Competency Area': metric, 'Score (1-5)': rating, 'Observations': comment });
+            });
+            const wsEval = XLSX.utils.json_to_sheet(evalRows);
+            XLSX.utils.book_append_sheet(wb, wsEval, 'Competencies');
+
+            const cleanEmp = empName.replace(/[^a-zA-Z0-9_-]/g, '_');
+            XLSX.writeFile(wb, `${cleanEmp}_${deptName}_Performance_Review.xlsx`);
+            showToast('Excel report downloaded successfully!', 'success', 3000);
+        }
+
+        // ==========================================
+        // 8. Multi-Page High-Res PDF Generation
         // ==========================================
         async function downloadPDF() {
-            const form = document.getElementById('performanceForm');
+            const isOps = currentDepartment === 'operations';
+            const form = document.getElementById(isOps ? 'operationsForm' : 'itPerformanceForm');
+
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
@@ -1757,9 +2801,11 @@
                 downloadBtn.disabled = true;
                 downloadBtn.style.opacity = '0.7';
             }
-            showToast('Rendering official review PDF...', 'loading', 0);
 
-            const element = document.getElementById('reviewDocument');
+            const deptTitle = isOps ? 'Operations' : 'IT';
+            showToast(`Rendering official ${deptTitle} review PDF...`, 'loading', 0);
+
+            const element = document.getElementById(isOps ? 'operationsDocument' : 'itDocument');
 
             // Scroll to top
             window.scrollTo(0, 0);
@@ -1767,7 +2813,7 @@
             // Temporarily enable clean PDF export styling
             element.classList.add('pdf-export-mode');
 
-            // Convert textareas and inputs to wrapping <div> blocks to prevent horizontal text cut-off
+            // Convert interactive controls to clean text divs to prevent clipping
             const replacers = [];
 
             element.querySelectorAll('textarea').forEach(ta => {
@@ -1779,7 +2825,7 @@
                 replacers.push({ orig: ta, replacer: div });
             });
 
-            element.querySelectorAll('.calc-score, input[type="number"]').forEach(inp => {
+            element.querySelectorAll('.calc-score-ops, .calc-score-it, input[type="number"]').forEach(inp => {
                 const div = document.createElement('div');
                 div.className = 'pdf-rendered-score';
                 div.textContent = inp.value || ' ';
@@ -1789,7 +2835,7 @@
             });
 
             element.querySelectorAll('input[type="text"], input[type="date"]').forEach(inp => {
-                if (inp.id === 'ceoSignName') return;
+                if (inp.id === 'itCeoSignName' || inp.id === 'opsManagerSignName' || inp.id === 'opsLdSignName') return;
                 const div = document.createElement('div');
                 div.className = 'pdf-rendered-inline';
                 div.textContent = inp.value || ' ';
@@ -1810,12 +2856,11 @@
             // Brief pause for browser layout reflow
             await new Promise(resolve => setTimeout(resolve, 150));
 
-            const empName = (document.getElementById('employeeName').value || 'Employee').trim().replace(/[^a-zA-Z0-9_-]/g, '_');
-            const reviewDate = document.getElementById('reviewDate').value || '2026';
-            const fileName = `${empName}_Performance_Review_${reviewDate}.pdf`;
+            const empName = (document.getElementById(isOps ? 'opsEmployeeName' : 'itEmployeeName').value || 'Employee').trim().replace(/[^a-zA-Z0-9_-]/g, '_');
+            const reviewDate = document.getElementById(isOps ? 'opsReviewDate' : 'itReviewDate').value || '2026';
+            const fileName = `${empName}_${deptTitle}_Performance_Review_${reviewDate}.pdf`;
 
             try {
-                // Render element to high-res canvas using html2canvas 1.4.1
                 const masterCanvas = await html2canvas(element, {
                     scale: 2,
                     useCORS: true,
@@ -1836,12 +2881,11 @@
                 const canvasWidth = masterCanvas.width;
                 const canvasHeight = masterCanvas.height;
 
-                // Printable area on A4 with 8mm margins (width: 194mm, height: 281mm)
+                // A4 printable area (width: 194mm, height: 281mm with 8mm margins)
                 const margin = 8;
                 const printWidth = 194;
                 const pagePrintHeight = 281;
 
-                // Height in canvas pixels corresponding to one PDF printable page
                 const pxPageHeight = Math.floor((canvasWidth * pagePrintHeight) / printWidth);
 
                 let sourceY = 0;
@@ -1850,7 +2894,6 @@
                 while (sourceY < canvasHeight) {
                     const chunkPxHeight = Math.min(pxPageHeight, canvasHeight - sourceY);
 
-                    // Create canvas for current page slice
                     const pageCanvas = document.createElement('canvas');
                     pageCanvas.width = canvasWidth;
                     pageCanvas.height = chunkPxHeight;
@@ -1859,7 +2902,6 @@
                     pageCtx.fillStyle = '#ffffff';
                     pageCtx.fillRect(0, 0, canvasWidth, chunkPxHeight);
 
-                    // Draw image slice from master canvas
                     pageCtx.drawImage(
                         masterCanvas,
                         0, sourceY, canvasWidth, chunkPxHeight,
@@ -1883,10 +2925,10 @@
                 showToast('PDF successfully downloaded!', 'success', 4000);
             } catch (err) {
                 console.error('PDF Generation Error:', err);
-                showToast('PDF generation issue. Opening browser print dialog...', 'error', 4000);
+                showToast('PDF issue. Opening browser print dialog...', 'error', 4000);
                 window.print();
             } finally {
-                // Restore all original interactive inputs and textareas
+                // Restore interactive elements
                 replacers.forEach(item => {
                     item.orig.style.display = '';
                     if (item.replacer && item.replacer.parentNode) {
@@ -1900,21 +2942,6 @@
                 }
             }
         }
-
-        // ==========================================
-        // 6. Reset Form
-        // ==========================================
-        function resetFormToDefaults() {
-            if (confirm('Are you sure you want to reset all form fields?')) {
-                document.getElementById('performanceForm').reset();
-                resetDefaultSignature();
-                calculateAvgScore();
-                showToast('Form reset to defaults', 'loading', 2000);
-            }
-        }
-
-        // Initialize score on page load
-        calculateAvgScore();
     </script>
 </body>
 
