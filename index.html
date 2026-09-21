@@ -1733,80 +1733,59 @@
                     </div>
                 </section>
 
-                <!-- Section 12: Signatures -->
+                <!-- Section 12: CEO Signature & Authorization -->
                 <section class="section">
                     <div class="section-header">
                         <div class="section-title-wrap">
                             <span class="section-num">12</span>
                             <div>
-                                <h3 class="section-title">Authorization &amp; Signatures</h3>
-                                <p class="section-subtitle">Formal approvals and digital signature authorization</p>
+                                <h3 class="section-title">CEO Approval &amp; Final Authorization</h3>
+                                <p class="section-subtitle">Executive authorization, signature file upload, and approval date</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="sig-wrapper">
-                        <!-- Manager Authorization Card -->
+                    <div class="sig-wrapper single">
                         <div class="sig-card">
                             <div class="sig-header-row">
-                                <label class="sig-title-label">Operations Manager Signature</label>
-                                <span class="sig-badge">Reporting Head</span>
+                                <label class="sig-title-label">CEO Authorization</label>
+                                <span class="sig-badge">Chief Executive Officer</span>
                             </div>
-                            <div class="form-group mb-sm">
-                                <label class="sub-label">Manager Name</label>
-                                <input type="text" id="opsManagerSignName" name="opsManagerSignName" value="Rajesh Verma" placeholder="Manager Name">
-                            </div>
-                            <label class="sub-label">Official Signature</label>
-                            <div class="preview-container">
-                                <div class="sig-img-wrap">
-                                    <img id="opsManagerSignImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Operations Manager Signature" class="sig-image">
-                                </div>
-                                <div id="opsManagerSigFile" class="sig-file-name"></div>
-                            </div>
-                            <div class="sig-upload-controls">
-                                <input type="file" id="opsManagerSignFile" accept="image/*" onchange="handleOpsSigUpload(event, 'manager')" class="hidden-file-input">
-                                <button type="button" class="btn btn-secondary btn-upload-sig" onclick="document.getElementById('opsManagerSignFile').click()">
-                                    📁 Upload Signature
-                                </button>
-                                <button type="button" class="btn-clear-sig" onclick="resetOpsSignature('manager')">
-                                    Reset
-                                </button>
-                            </div>
-                            <div class="form-group">
-                                <label class="sub-label">Date</label>
-                                <input type="date" id="opsManagerSignDate" name="opsManagerSignDate" value="2026-09-16">
-                            </div>
-                        </div>
 
-                        <!-- Department Head / L&D Authorization Card -->
-                        <div class="sig-card">
-                            <div class="sig-header-row">
-                                <label class="sig-title-label">L&amp;D / Executive Authorization</label>
-                                <span class="sig-badge">Head of L&amp;D</span>
+                            <div class="form-group mb-md">
+                                <label class="sub-label">Authorized Signatory Name</label>
+                                <input type="text" id="opsCeoSignName" name="opsCeoSignName" value="Sheetal Ma'am"
+                                    placeholder="CEO Name" class="ceo-name-input">
                             </div>
-                            <div class="form-group mb-sm">
-                                <label class="sub-label">Executive Name</label>
-                                <input type="text" id="opsLdSignName" name="opsLdSignName" value="Sheetal Ma'am" placeholder="Executive Name">
-                            </div>
-                            <label class="sub-label">Official Signature</label>
+
+                            <label class="sub-label">CEO Official Signature</label>
+
+                            <!-- Signature Image Display -->
                             <div class="preview-container">
                                 <div class="sig-img-wrap">
-                                    <img id="opsLdSignImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="L&D Signature" class="sig-image">
+                                    <img id="opsCeoSignImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                                        alt="CEO Signature" class="sig-image">
                                 </div>
-                                <div id="opsLdSigFile" class="sig-file-name"></div>
+                                <div id="opsSigFileName" class="sig-file-name"></div>
                             </div>
+
+                            <!-- Upload Controls -->
                             <div class="sig-upload-controls">
-                                <input type="file" id="opsLdSignFile" accept="image/*" onchange="handleOpsSigUpload(event, 'ld')" class="hidden-file-input">
-                                <button type="button" class="btn btn-secondary btn-upload-sig" onclick="document.getElementById('opsLdSignFile').click()">
-                                    📁 Upload Signature
+                                <input type="file" id="opsCeoSignFileInput"
+                                    accept="image/png, image/jpeg, image/jpg, image/webp"
+                                    onchange="handleOpsSignatureFileUpload(event)" class="hidden-file-input">
+                                <button type="button" class="btn btn-secondary btn-upload-sig"
+                                    onclick="document.getElementById('opsCeoSignFileInput').click()">
+                                    📁 Upload Signature File
                                 </button>
-                                <button type="button" class="btn-clear-sig" onclick="resetOpsSignature('ld')">
-                                    Reset
+                                <button type="button" class="btn-clear-sig" onclick="resetOpsDefaultSignature()">
+                                    Reset to Default
                                 </button>
                             </div>
+
                             <div class="form-group">
-                                <label class="sub-label">Date</label>
-                                <input type="date" id="opsLdSignDate" name="opsLdSignDate" value="2026-09-16">
+                                <label class="sub-label">Authorization Date</label>
+                                <input type="date" id="opsCeoSignDate" name="opsCeoSignDate" value="2026-09-16">
                             </div>
                         </div>
                     </div>
@@ -2495,26 +2474,19 @@
             return c.toDataURL('image/png');
         }
 
-        let defaultItSigURL = null;
-        let defaultOpsMgrSigURL = null;
-        let defaultOpsLdSigURL = null;
+        let defaultMaamSigURL = null;
 
         function initDefaultSignatures() {
-            if (!defaultItSigURL) defaultItSigURL = createSignaturePNG("Sheetal", "#1e3a8a");
-            if (!defaultOpsMgrSigURL) defaultOpsMgrSigURL = createSignaturePNG("Rajesh", "#0f766e");
-            if (!defaultOpsLdSigURL) defaultOpsLdSigURL = createSignaturePNG("Sheetal", "#0f766e");
+            if (!defaultMaamSigURL) defaultMaamSigURL = createSignaturePNG("Sheetal", "#1e3a8a");
 
             const itImg = document.getElementById('itCeoSignImage');
-            if (itImg && itImg.src.includes('R0lGODlhAQAB')) itImg.src = defaultItSigURL;
+            if (itImg && (itImg.src.includes('R0lGODlhAQAB') || !itImg.src)) itImg.src = defaultMaamSigURL;
 
-            const opsMgrImg = document.getElementById('opsManagerSignImg');
-            if (opsMgrImg && opsMgrImg.src.includes('R0lGODlhAQAB')) opsMgrImg.src = defaultOpsMgrSigURL;
-
-            const opsLdImg = document.getElementById('opsLdSignImg');
-            if (opsLdImg && opsLdImg.src.includes('R0lGODlhAQAB')) opsLdImg.src = defaultOpsLdSigURL;
+            const opsImg = document.getElementById('opsCeoSignImage');
+            if (opsImg && (opsImg.src.includes('R0lGODlhAQAB') || !opsImg.src)) opsImg.src = defaultMaamSigURL;
         }
 
-        // IT Signature Handlers
+        // Shared / Synchronized Signature Upload Handlers
         function handleItSignatureFileUpload(event) {
             const file = event.target.files[0];
             if (file) {
@@ -2524,27 +2496,31 @@
                 }
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    document.getElementById('itCeoSignImage').src = e.target.result;
+                    const dataUrl = e.target.result;
+                    const itImg = document.getElementById('itCeoSignImage');
+                    if (itImg) itImg.src = dataUrl;
                     const fileNameEl = document.getElementById('itSigFileName');
-                    fileNameEl.textContent = 'Uploaded: ' + file.name;
-                    fileNameEl.style.display = 'block';
-                    showToast('CEO Signature attached!', 'success', 2500);
+                    if (fileNameEl) {
+                        fileNameEl.textContent = 'Uploaded: ' + file.name;
+                        fileNameEl.style.display = 'block';
+                    }
+
+                    // Keep synchronized on operations as well so ma'am's signature is updated everywhere
+                    const opsImg = document.getElementById('opsCeoSignImage');
+                    if (opsImg) opsImg.src = dataUrl;
+                    const opsFileEl = document.getElementById('opsSigFileName');
+                    if (opsFileEl) {
+                        opsFileEl.textContent = 'Uploaded: ' + file.name;
+                        opsFileEl.style.display = 'block';
+                    }
+
+                    showToast("CEO Signature attached to both forms!", 'success', 2500);
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        function resetItDefaultSignature() {
-            document.getElementById('itCeoSignImage').src = defaultItSigURL;
-            const fileInput = document.getElementById('itCeoSignFileInput');
-            if (fileInput) fileInput.value = '';
-            const fileNameEl = document.getElementById('itSigFileName');
-            if (fileNameEl) fileNameEl.style.display = 'none';
-            showToast('IT Signature reset to default', 'loading', 2000);
-        }
-
-        // Operations Signature Handlers
-        function handleOpsSigUpload(event, type) {
+        function handleOpsSignatureFileUpload(event) {
             const file = event.target.files[0];
             if (file) {
                 if (!file.type.startsWith('image/')) {
@@ -2553,34 +2529,58 @@
                 }
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    if (type === 'manager') {
-                        document.getElementById('opsManagerSignImg').src = e.target.result;
-                        const fn = document.getElementById('opsManagerSigFile');
-                        fn.textContent = 'Uploaded: ' + file.name;
-                        fn.style.display = 'block';
-                    } else {
-                        document.getElementById('opsLdSignImg').src = e.target.result;
-                        const fn = document.getElementById('opsLdSigFile');
-                        fn.textContent = 'Uploaded: ' + file.name;
-                        fn.style.display = 'block';
+                    const dataUrl = e.target.result;
+                    const opsImg = document.getElementById('opsCeoSignImage');
+                    if (opsImg) opsImg.src = dataUrl;
+                    const fileNameEl = document.getElementById('opsSigFileName');
+                    if (fileNameEl) {
+                        fileNameEl.textContent = 'Uploaded: ' + file.name;
+                        fileNameEl.style.display = 'block';
                     }
-                    showToast('Signature attached!', 'success', 2500);
+
+                    // Keep synchronized on IT form as well
+                    const itImg = document.getElementById('itCeoSignImage');
+                    if (itImg) itImg.src = dataUrl;
+                    const itFileEl = document.getElementById('itSigFileName');
+                    if (itFileEl) {
+                        itFileEl.textContent = 'Uploaded: ' + file.name;
+                        itFileEl.style.display = 'block';
+                    }
+
+                    showToast("CEO Signature attached to both forms!", 'success', 2500);
                 };
                 reader.readAsDataURL(file);
             }
         }
 
+        function resetItDefaultSignature() {
+            if (!defaultMaamSigURL) defaultMaamSigURL = createSignaturePNG("Sheetal", "#1e3a8a");
+            const itImg = document.getElementById('itCeoSignImage');
+            if (itImg) itImg.src = defaultMaamSigURL;
+            const fileInput = document.getElementById('itCeoSignFileInput');
+            if (fileInput) fileInput.value = '';
+            const fileNameEl = document.getElementById('itSigFileName');
+            if (fileNameEl) fileNameEl.style.display = 'none';
+            showToast('IT Signature reset to default', 'loading', 2000);
+        }
+
+        function resetOpsDefaultSignature() {
+            if (!defaultMaamSigURL) defaultMaamSigURL = createSignaturePNG("Sheetal", "#1e3a8a");
+            const opsImg = document.getElementById('opsCeoSignImage');
+            if (opsImg) opsImg.src = defaultMaamSigURL;
+            const fileInput = document.getElementById('opsCeoSignFileInput');
+            if (fileInput) fileInput.value = '';
+            const fileNameEl = document.getElementById('opsSigFileName');
+            if (fileNameEl) fileNameEl.style.display = 'none';
+            showToast('Operations Signature reset to default', 'loading', 2000);
+        }
+
+        // Backward compatibility wrappers
+        function handleOpsSigUpload(event, type) {
+            handleOpsSignatureFileUpload(event);
+        }
         function resetOpsSignature(type) {
-            if (type === 'manager') {
-                document.getElementById('opsManagerSignImg').src = defaultOpsMgrSigURL;
-                document.getElementById('opsManagerSignFile').value = '';
-                document.getElementById('opsManagerSigFile').style.display = 'none';
-            } else {
-                document.getElementById('opsLdSignImg').src = defaultOpsLdSigURL;
-                document.getElementById('opsLdSignFile').value = '';
-                document.getElementById('opsLdSigFile').style.display = 'none';
-            }
-            showToast('Signature reset to default', 'loading', 2000);
+            resetOpsDefaultSignature();
         }
 
         // ==========================================
@@ -2711,8 +2711,7 @@
             if (confirm(`Are you sure you want to reset all fields in the ${currentDepartment.toUpperCase()} form?`)) {
                 document.getElementById(formId).reset();
                 if (currentDepartment === 'operations') {
-                    resetOpsSignature('manager');
-                    resetOpsSignature('ld');
+                    resetOpsDefaultSignature();
                     calculateOpsAvgScore();
                 } else {
                     resetItDefaultSignature();
@@ -2835,7 +2834,7 @@
             });
 
             element.querySelectorAll('input[type="text"], input[type="date"]').forEach(inp => {
-                if (inp.id === 'itCeoSignName' || inp.id === 'opsManagerSignName' || inp.id === 'opsLdSignName') return;
+                if (inp.id === 'itCeoSignName' || inp.id === 'opsCeoSignName' || inp.id === 'opsManagerSignName' || inp.id === 'opsLdSignName') return;
                 const div = document.createElement('div');
                 div.className = 'pdf-rendered-inline';
                 div.textContent = inp.value || ' ';
