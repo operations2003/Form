@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Performance Review Portal | Operations &amp; IT</title>
+    <title>Team Performance Review Portal | Operations, IT &amp; TA</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +30,12 @@
             --ops-primary-light: #f0fdfa;
             --ops-accent: #0d9488;
             --ops-accent-subtle: #ccfbf1;
+
+            --ta-primary: #7c3aed;
+            --ta-primary-hover: #6d28d9;
+            --ta-primary-light: #f5f3ff;
+            --ta-accent: #8b5cf6;
+            --ta-accent-subtle: #ede9fe;
 
             --success: #059669;
             --success-light: #ecfdf5;
@@ -168,6 +174,17 @@
             box-shadow: 0 5px 14px rgba(13, 148, 136, 0.4);
         }
 
+        .btn-ta-primary {
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            color: white;
+            box-shadow: 0 3px 10px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-ta-primary:hover {
+            background: linear-gradient(135deg, #6d28d9, #7c3aed);
+            box-shadow: 0 5px 14px rgba(139, 92, 246, 0.4);
+        }
+
         .btn-excel {
             background: linear-gradient(135deg, #059669, #10b981);
             color: white;
@@ -257,6 +274,13 @@
             font-weight: 700;
         }
 
+        .tab-btn.active.ta-tab {
+            background: white;
+            color: #7c3aed;
+            box-shadow: 0 3px 8px rgba(124, 58, 237, 0.15);
+            font-weight: 700;
+        }
+
         .tab-badge {
             font-size: 10.5px;
             padding: 2px 7px;
@@ -273,6 +297,11 @@
         .it-tab .tab-badge {
             background: #dbeafe;
             color: #1e3a8a;
+        }
+
+        .ta-tab .tab-badge {
+            background: #ede9fe;
+            color: #7c3aed;
         }
 
         /* Form Card */
@@ -325,6 +354,20 @@
             background: linear-gradient(90deg, #34d399, #14b8a6, #2dd4bf);
         }
 
+        .doc-header.ta-header {
+            background: linear-gradient(135deg, #2e1065 0%, #4c1d95 50%, #6d28d9 100%);
+        }
+
+        .doc-header.ta-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #c084fc, #a855f7, #ec4899);
+        }
+
         .doc-tag {
             display: inline-block;
             background: rgba(255, 255, 255, 0.12);
@@ -345,6 +388,10 @@
 
         .ops-header .doc-tag {
             color: #99f6e4;
+        }
+
+        .ta-header .doc-tag {
+            color: #e9d5ff;
         }
 
         .doc-header h1 {
@@ -407,6 +454,11 @@
         .ops-theme .section-num {
             background: var(--ops-primary-light);
             color: var(--ops-primary);
+        }
+
+        .ta-theme .section-num {
+            background: var(--ta-primary-light);
+            color: var(--ta-primary);
         }
 
         .section-title {
@@ -502,6 +554,13 @@
             box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
         }
 
+        .ta-theme input:focus,
+        .ta-theme select:focus,
+        .ta-theme textarea:focus {
+            border-color: var(--ta-accent);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+        }
+
         textarea {
             resize: vertical;
             min-height: 85px;
@@ -537,6 +596,10 @@
             border-color: var(--ops-accent);
         }
 
+        .ta-theme .scale-card:hover {
+            border-color: var(--ta-accent);
+        }
+
         .scale-val {
             display: inline-block;
             width: 28px;
@@ -555,6 +618,10 @@
 
         .ops-theme .scale-val {
             background: var(--ops-primary);
+        }
+
+        .ta-theme .scale-val {
+            background: var(--ta-primary);
         }
 
         .scale-title {
@@ -592,6 +659,12 @@
             background: #f0fdfa;
             color: #0f766e;
             border: 1px solid #99f6e4;
+        }
+
+        .ta-theme .avg-score-badge {
+            background: #f5f3ff;
+            color: #7c3aed;
+            border: 1px solid #ddd6fe;
         }
 
         /* Tables */
@@ -706,6 +779,14 @@
             font-weight: 700;
         }
 
+        .ta-theme .radio-card input[type="radio"]:checked+label {
+            background: #f5f3ff;
+            border-color: var(--ta-accent);
+            color: var(--ta-primary);
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+            font-weight: 700;
+        }
+
         /* Action Checklist */
         .checklist-grid {
             display: grid;
@@ -744,6 +825,13 @@
             accent-color: var(--ops-accent);
         }
 
+        .ta-theme .check-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--ta-accent);
+        }
+
         .check-item span {
             font-size: 13px;
             font-weight: 500;
@@ -780,6 +868,11 @@
             box-shadow: 0 4px 14px rgba(15, 118, 110, 0.07);
         }
 
+        .ta-theme .sig-card {
+            border-color: var(--ta-accent-subtle);
+            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.07);
+        }
+
         .sig-header-row {
             display: flex;
             justify-content: space-between;
@@ -801,6 +894,10 @@
             color: var(--ops-primary);
         }
 
+        .ta-theme .sig-title-label {
+            color: var(--ta-primary);
+        }
+
         .sig-badge {
             font-size: 11px;
             font-weight: 700;
@@ -818,6 +915,12 @@
             background: #f0fdfa;
             color: #0f766e;
             border: 1px solid #99f6e4;
+        }
+
+        .ta-theme .sig-badge {
+            background: #f5f3ff;
+            color: #7c3aed;
+            border: 1px solid #ddd6fe;
         }
 
         .sub-label {
@@ -1202,7 +1305,7 @@
                 <div class="brand-icon" id="brandIcon">📋</div>
                 <div class="brand-text">
                     <h2 id="portalTitle">Performance Review Portal</h2>
-                    <span id="portalSubtitle">Operations &amp; IT Team Evaluation &amp; Export</span>
+                    <span id="portalSubtitle">Operations, IT &amp; TA Team Evaluation &amp; Export</span>
                 </div>
             </div>
             <div class="actions-group">
@@ -1231,6 +1334,10 @@
                 <button type="button" class="tab-btn it-tab" id="tabBtnIT" onclick="switchDepartment('it')">
                     <span>💻 IT &amp; Engineering</span>
                     <span class="tab-badge">IT</span>
+                </button>
+                <button type="button" class="tab-btn ta-tab" id="tabBtnTA" onclick="switchDepartment('ta')">
+                    <span>🎯 Talent Acquisition</span>
+                    <span class="tab-badge">TA</span>
                 </button>
             </div>
         </div>
@@ -2379,6 +2486,556 @@
 
             </form>
         </section>
+
+        <!-- ======================================================== -->
+        <!-- 3. TALENT ACQUISITION (TA) PERFORMANCE REVIEW FORM -->
+        <!-- ======================================================== -->
+        <section class="form-card ta-theme hidden" id="taDocument" aria-labelledby="taDocTitle">
+            <!-- TA Document Header -->
+            <div class="doc-header ta-header">
+                <span class="doc-tag">Department of Talent Acquisition • L&amp;D</span>
+                <h1 id="taDocTitle">Talent Acquisition Team Performance Review</h1>
+                <p>Learning &amp; Development | TA Department Performance Calibration &amp; Progression Review</p>
+            </div>
+
+            <!-- TA Form Content -->
+            <form id="taPerformanceForm" class="form-body" onsubmit="event.preventDefault(); downloadPDF();">
+
+                <!-- Section 1: Employee Information -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">1</span>
+                            <div>
+                                <h3 class="section-title">Employee Information</h3>
+                                <p class="section-subtitle">Basic employee profile and review cycle identification</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="taEmployeeName">Employee Name <span class="req">*</span></label>
+                            <input type="text" id="taEmployeeName" name="taEmployeeName" value="Harsh Agarwal" required
+                                placeholder="Full employee name">
+                        </div>
+                        <div class="form-group">
+                            <label for="taEmployeeId">Employee ID</label>
+                            <input type="text" id="taEmployeeId" name="taEmployeeId" value="NA" placeholder="e.g. TA-2024-042">
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="taDepartment">Department</label>
+                            <input type="text" id="taDepartment" name="taDepartment" value="TA" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="taDesignation">Designation</label>
+                            <input type="text" id="taDesignation" name="taDesignation" value="TA TL"
+                                placeholder="e.g. Talent Acquisition Team Lead">
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="taManager">Reporting Manager <span class="req">*</span></label>
+                            <input type="text" id="taManager" name="taManager" value="Aakanksha Jadhav" required
+                                placeholder="Manager name">
+                        </div>
+                        <div class="form-group">
+                            <label for="taReviewDate">Review Date</label>
+                            <input type="date" id="taReviewDate" name="taReviewDate" value="2026-09-14">
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="taReviewPeriod">Review Period</label>
+                            <input type="text" id="taReviewPeriod" name="taReviewPeriod" value="30/08/2026 – 12/09/2026"
+                                placeholder="e.g. Bi-Weekly / Monthly">
+                        </div>
+                        <div class="form-group">
+                            <label for="taLdExecutive">L&amp;D Executive</label>
+                            <input type="text" id="taLdExecutive" name="taLdExecutive" value="Swati Batabyal"
+                                placeholder="L&D Lead / HRBP">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Rating Scale Reference -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">2</span>
+                            <div>
+                                <h3 class="section-title">Rating Scale Reference</h3>
+                                <p class="section-subtitle">Evaluation rubric standard applied across all functional areas</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rating-scale-grid">
+                        <div class="scale-card">
+                            <span class="scale-val">5</span>
+                            <span class="scale-title">Exceptional</span>
+                            <span class="scale-desc">Consistently surpasses peak benchmarks</span>
+                        </div>
+                        <div class="scale-card">
+                            <span class="scale-val">4</span>
+                            <span class="scale-title">Exceeds Expectations</span>
+                            <span class="scale-desc">Frequently outperforms core targets</span>
+                        </div>
+                        <div class="scale-card">
+                            <span class="scale-val">3</span>
+                            <span class="scale-title">Meets Expectations</span>
+                            <span class="scale-desc">Reliably satisfies role responsibilities</span>
+                        </div>
+                        <div class="scale-card">
+                            <span class="scale-val">2</span>
+                            <span class="scale-title">Needs Improvement</span>
+                            <span class="scale-desc">Noticeable performance/output gap</span>
+                        </div>
+                        <div class="scale-card">
+                            <span class="scale-val">1</span>
+                            <span class="scale-title">Unsatisfactory</span>
+                            <span class="scale-desc">Substantially falls below requirements</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Performance Evaluation -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">3</span>
+                            <div>
+                                <h3 class="section-title">Performance Evaluation (Functional Competencies)</h3>
+                                <p class="section-subtitle">Rate employee performance across 9 core talent acquisition competency metrics</p>
+                            </div>
+                        </div>
+                        <div id="taLiveScoreBadge" class="avg-score-badge">
+                            Average Score: <strong>3.44 / 5.0</strong>
+                        </div>
+                    </div>
+
+                    <div class="eval-table-wrap">
+                        <table class="custom-table" id="taEvalTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 32%;">Performance Area</th>
+                                    <th style="width: 140px;">Rating (1–5)</th>
+                                    <th>Evaluator Comments &amp; Observations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="area-name">Quality of CVs</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ta" min="1" max="5" step="0.5" value="3" oninput="calculateTaAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" placeholder="Observation on CV screening & relevance"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Productivity (TL)</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ta" min="1" max="5" step="0.5" value="4.5" oninput="calculateTaAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" placeholder="Observation on daily output & throughput"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Meeting Deadlines</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ta" min="1" max="5" step="0.5" value="2" oninput="calculateTaAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" placeholder="Observation on adherence to turnaround SLAs"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Communication (TL)</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ta" min="1" max="5" step="0.5" value="3" oninput="calculateTaAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" placeholder="Observation on candidate & stakeholder messaging"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Teamwork (TL)</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ta" min="1" max="5" step="0.5" value="4.5" oninput="calculateTaAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" placeholder="Observation on pod collaboration & mentorship"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Recruitment Understanding</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ta" min="1" max="5" step="0.5" value="4" oninput="calculateTaAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" placeholder="Observation on role comprehension & search strategy"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Attendance &amp; Punctuality</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ta" min="1" max="5" step="0.5" value="3" oninput="calculateTaAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" placeholder="Observation on attendance and timeliness"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Initiative &amp; Ownership</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ta" min="1" max="5" step="0.5" value="5" oninput="calculateTaAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" placeholder="Observation on proactive problem solving"></td>
+                                </tr>
+                                <tr>
+                                    <td class="area-name">Candidate Submission</td>
+                                    <td>
+                                        <div class="rating-input-box">
+                                            <input type="number" class="calc-score-ta" min="1" max="5" step="0.5" value="2" oninput="calculateTaAvgScore()">
+                                            <span class="rating-suffix">/ 5</span>
+                                        </div>
+                                    </td>
+                                    <td><input type="text" placeholder="Observation on submission volume & funnel velocity"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Section 4: Key Achievements -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">4</span>
+                            <div>
+                                <h3 class="section-title">Key Accomplishments &amp; Milestones</h3>
+                                <p class="section-subtitle">Significant deliverables completed in this review cycle</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="taAchievements">Major Accomplishments <span class="req">*</span></label>
+                        <textarea id="taAchievements" name="taAchievements" required
+                            placeholder="Detail significant sourcing milestones, hire closures, or process innovations...">Achieved target ATS score of 90+</textarea>
+                    </div>
+                </section>
+
+                <!-- Section 5: Areas for Improvement -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">5</span>
+                            <div>
+                                <h3 class="section-title">Areas for Growth &amp; Improvement</h3>
+                                <p class="section-subtitle">Development priorities and operational focal points for the next period</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="taImprovements">Development Opportunities <span class="req">*</span></label>
+                        <textarea id="taImprovements" name="taImprovements" required
+                            placeholder="Identify targeted areas for coaching, outreach improvements, or operational efficiency...">Increase your LinkedIn connections&#10;Use company resources to get more leads to achieve the targeted number</textarea>
+                    </div>
+                </section>
+
+                <!-- Section 6: Goals for Next Period -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">6</span>
+                            <div>
+                                <h3 class="section-title">Goals &amp; Performance Objectives</h3>
+                                <p class="section-subtitle">Actionable milestones established for the upcoming review window</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="addTaGoalRow()">+ Add Goal Row</button>
+                    </div>
+
+                    <div class="eval-table-wrap">
+                        <table class="custom-table" id="taGoalsTable">
+                            <thead>
+                                <tr>
+                                    <th>Objective / Goal Title</th>
+                                    <th>Target Output Metric</th>
+                                    <th style="width: 150px;">Target Date</th>
+                                    <th style="width: 140px;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" value="10 Candidate Submissions" placeholder="Goal title"></td>
+                                    <td><input type="text" value="6 Candidate Submissions" placeholder="Target deliverable"></td>
+                                    <td><input type="date" value="2026-09-19"></td>
+                                    <td><input type="text" value="Planned" placeholder="Status"></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" placeholder="Goal title"></td>
+                                    <td><input type="text" placeholder="Target deliverable"></td>
+                                    <td><input type="date"></td>
+                                    <td><input type="text" placeholder="Status"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Section 7: Training Needs -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">7</span>
+                            <div>
+                                <h3 class="section-title">Professional Development &amp; Training Roadmap</h3>
+                                <p class="section-subtitle">Specialized training programs, talent sourcing workshops, or skill interventions</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="addTaTrainingRow()">+ Add Training Need</button>
+                    </div>
+
+                    <div class="eval-table-wrap">
+                        <table class="custom-table" id="taTrainingTable">
+                            <thead>
+                                <tr>
+                                    <th>Skill / Focus Area</th>
+                                    <th>Recommended Course / Certification</th>
+                                    <th style="width: 150px;">Priority Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" value="NA" placeholder="Skill / Domain"></td>
+                                    <td><input type="text" placeholder="Recommended training program"></td>
+                                    <td>
+                                        <select>
+                                            <option value="High" selected>High</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="Low">Low</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Section 8: Employee Feedback -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">8</span>
+                            <div>
+                                <h3 class="section-title">Employee Self-Reflection &amp; Feedback</h3>
+                                <p class="section-subtitle">Employee perspective on team support, tooling, and workload calibration</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="taEmployeeComments">Employee Remarks</label>
+                        <textarea id="taEmployeeComments" name="taEmployeeComments"
+                            placeholder="Employee observations on recruitment tooling, sourcing channels, or management support...">NA</textarea>
+                    </div>
+                </section>
+
+                <!-- Section 9: Manager Feedback -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">9</span>
+                            <div>
+                                <h3 class="section-title">Evaluator Summary &amp; Management Feedback</h3>
+                                <p class="section-subtitle">Comprehensive management assessment and performance overview</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="taManagerComments">Manager Performance Summary <span class="req">*</span></label>
+                        <textarea id="taManagerComments" name="taManagerComments" required
+                            placeholder="Detail overall performance context, consistency, and team contributions...">Harsh has given a good performance as a recruiter. Although he has exceptional skills, we need him to improve his communication skills and leadership skills in order to get the work done smoothly — he needs to achieve targets more consistently going forward. Please work on deadlines and maintain your tracker on time; improve time management and task allocation as given.</textarea>
+                    </div>
+                </section>
+
+                <!-- Section 10: Overall Rating -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">10</span>
+                            <div>
+                                <h3 class="section-title">Overall Performance Rating</h3>
+                                <p class="section-subtitle">Calibrated determination of overall employee output during this cycle</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overall-radio-grid">
+                        <div class="radio-card">
+                            <input type="radio" id="taRating5" name="taOverallRating" value="Exceptional">
+                            <label for="taRating5">
+                                <strong>5 - Exceptional</strong>
+                            </label>
+                        </div>
+                        <div class="radio-card">
+                            <input type="radio" id="taRating4" name="taOverallRating" value="Exceeds Expectations">
+                            <label for="taRating4">
+                                <strong>4 - Exceeds</strong>
+                            </label>
+                        </div>
+                        <div class="radio-card">
+                            <input type="radio" id="taRating3" name="taOverallRating" value="Meets Expectations" checked>
+                            <label for="taRating3">
+                                <strong>3 - Meets</strong>
+                            </label>
+                        </div>
+                        <div class="radio-card">
+                            <input type="radio" id="taRating2" name="taOverallRating" value="Needs Improvement">
+                            <label for="taRating2">
+                                <strong>2 - Needs Growth</strong>
+                            </label>
+                        </div>
+                        <div class="radio-card">
+                            <input type="radio" id="taRating1" name="taOverallRating" value="Unsatisfactory">
+                            <label for="taRating1">
+                                <strong>1 - Unsatisfactory</strong>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 11: Recommended Actions -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">11</span>
+                            <div>
+                                <h3 class="section-title">Recommended Administrative Actions</h3>
+                                <p class="section-subtitle">Select applicable HR / management decisions</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checklist-grid">
+                        <label class="check-item">
+                            <input type="checkbox" id="taAction1" name="taAction_1" value="Continue in Current Role" checked>
+                            <span>Continue in Current Role</span>
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="taAction2" name="taAction_2" value="Salary Revision Recommended">
+                            <span>Salary Revision Recommended</span>
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="taAction3" name="taAction_3" value="Promotion / Role Advancement Recommended">
+                            <span>Promotion / Role Advancement Recommended</span>
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="taAction4" name="taAction_4" value="Additional Training Required">
+                            <span>Additional Training Required</span>
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="taAction5" name="taAction_5" value="Performance Improvement Plan Required">
+                            <span>Performance Improvement Plan Required</span>
+                        </label>
+                        <label class="check-item">
+                            <input type="checkbox" id="taAction6" name="taAction_6" value="Role / Responsibility Change Recommended">
+                            <span>Role / Responsibility Change Recommended</span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Section 12: CEO Signature & Authorization -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title-wrap">
+                            <span class="section-num">12</span>
+                            <div>
+                                <h3 class="section-title">CEO Approval &amp; Final Authorization</h3>
+                                <p class="section-subtitle">Executive authorization, signature file upload, and approval date</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sig-wrapper single">
+                        <div class="sig-card">
+                            <div class="sig-header-row">
+                                <label class="sig-title-label">CEO Authorization</label>
+                                <span class="sig-badge">Chief Executive Officer</span>
+                            </div>
+
+                            <div class="form-group mb-md">
+                                <label class="sub-label">Authorized Signatory Name</label>
+                                <input type="text" id="taCeoSignName" name="taCeoSignName" value="Sheetal Ma'am"
+                                    placeholder="CEO Name" class="ceo-name-input">
+                            </div>
+
+                            <label class="sub-label">CEO Official Signature</label>
+
+                            <!-- Signature Image Display -->
+                            <div class="preview-container">
+                                <div class="sig-img-wrap">
+                                    <img id="taCeoSignImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                                        alt="CEO Signature" class="sig-image">
+                                </div>
+                                <div id="taSigFileName" class="sig-file-name"></div>
+                            </div>
+
+                            <!-- Upload Controls -->
+                            <div class="sig-upload-controls">
+                                <input type="file" id="taCeoSignFileInput"
+                                    accept="image/png, image/jpeg, image/jpg, image/webp"
+                                    onchange="handleTaSignatureFileUpload(event)" class="hidden-file-input">
+                                <button type="button" class="btn btn-secondary btn-upload-sig"
+                                    onclick="document.getElementById('taCeoSignFileInput').click()">
+                                    📁 Upload Signature File
+                                </button>
+                                <button type="button" class="btn-clear-sig" onclick="resetTaDefaultSignature()">
+                                    Reset to Default
+                                </button>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="sub-label">Authorization Date</label>
+                                <input type="date" id="taCeoSignDate" name="taCeoSignDate" value="2026-09-16">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Form Footer Actions -->
+                <div class="form-footer-actions">
+                    <button type="button" class="btn btn-secondary" onclick="resetCurrentForm()">
+                        🔄 Reset Form
+                    </button>
+                    <button type="submit" class="btn btn-ta-primary footer-submit-btn">
+                        📥 Submit &amp; Download PDF
+                    </button>
+                </div>
+
+            </form>
+        </section>
     </main>
 
     <!-- Notification Toast -->
@@ -2391,38 +3048,54 @@
         // ==========================================
         // 1. Department Switcher State & Handlers
         // ==========================================
-        let currentDepartment = 'operations'; // 'operations' or 'it'
+        // ==========================================
+        // 1. Department Switcher State & Handlers
+        // ==========================================
+        let currentDepartment = 'operations'; // 'operations', 'it', or 'ta'
 
         function switchDepartment(dept) {
             currentDepartment = dept;
             const opsDoc = document.getElementById('operationsDocument');
             const itDoc = document.getElementById('itDocument');
+            const taDoc = document.getElementById('taDocument');
             const tabOps = document.getElementById('tabBtnOps');
             const tabIt = document.getElementById('tabBtnIT');
+            const tabTa = document.getElementById('tabBtnTA');
             const brandIcon = document.getElementById('brandIcon');
             const portalSubtitle = document.getElementById('portalSubtitle');
             const btnDownload = document.getElementById('btnDownloadPDF');
 
+            opsDoc.classList.add('hidden');
+            itDoc.classList.add('hidden');
+            taDoc.classList.add('hidden');
+            tabOps.classList.remove('active');
+            tabIt.classList.remove('active');
+            tabTa.classList.remove('active');
+
             if (dept === 'operations') {
                 opsDoc.classList.remove('hidden');
-                itDoc.classList.add('hidden');
                 tabOps.classList.add('active');
-                tabIt.classList.remove('active');
                 brandIcon.textContent = '🏢';
                 brandIcon.style.background = 'linear-gradient(135deg, #0f766e, #14b8a6)';
                 portalSubtitle.textContent = 'Operations Team Performance Evaluation & Export';
                 btnDownload.className = 'btn btn-ops-primary';
                 location.hash = 'operations';
-            } else {
-                opsDoc.classList.add('hidden');
+            } else if (dept === 'it') {
                 itDoc.classList.remove('hidden');
-                tabOps.classList.remove('active');
                 tabIt.classList.add('active');
                 brandIcon.textContent = '💻';
                 brandIcon.style.background = 'linear-gradient(135deg, #1e3a8a, #2563eb)';
                 portalSubtitle.textContent = 'Information Technology Performance Evaluation & Export';
                 btnDownload.className = 'btn btn-primary';
                 location.hash = 'it';
+            } else if (dept === 'ta') {
+                taDoc.classList.remove('hidden');
+                tabTa.classList.add('active');
+                brandIcon.textContent = '🎯';
+                brandIcon.style.background = 'linear-gradient(135deg, #7c3aed, #8b5cf6)';
+                portalSubtitle.textContent = 'Talent Acquisition Team Performance Evaluation & Export';
+                btnDownload.className = 'btn btn-ta-primary';
+                location.hash = 'ta';
             }
 
             // Smooth scroll to top of form
@@ -2434,12 +3107,15 @@
             const hash = window.location.hash.replace('#', '').toLowerCase();
             if (hash === 'it') {
                 switchDepartment('it');
+            } else if (hash === 'ta') {
+                switchDepartment('ta');
             } else {
                 switchDepartment('operations');
             }
             initDefaultSignatures();
             calculateOpsAvgScore();
             calculateItAvgScore();
+            calculateTaAvgScore();
         });
 
         // ==========================================
@@ -2479,14 +3155,26 @@
         function initDefaultSignatures() {
             if (!defaultMaamSigURL) defaultMaamSigURL = createSignaturePNG("Sheetal", "#1e3a8a");
 
-            const itImg = document.getElementById('itCeoSignImage');
-            if (itImg && (itImg.src.includes('R0lGODlhAQAB') || !itImg.src)) itImg.src = defaultMaamSigURL;
-
-            const opsImg = document.getElementById('opsCeoSignImage');
-            if (opsImg && (opsImg.src.includes('R0lGODlhAQAB') || !opsImg.src)) opsImg.src = defaultMaamSigURL;
+            ['it', 'ops', 'ta'].forEach(prefix => {
+                const img = document.getElementById(prefix + 'CeoSignImage');
+                if (img && (img.src.includes('R0lGODlhAQAB') || !img.src)) img.src = defaultMaamSigURL;
+            });
         }
 
         // Shared / Synchronized Signature Upload Handlers
+        function syncSignatureDataURL(dataUrl, fileName) {
+            ['it', 'ops', 'ta'].forEach(prefix => {
+                const img = document.getElementById(prefix + 'CeoSignImage');
+                if (img) img.src = dataUrl;
+                const fileEl = document.getElementById(prefix + 'SigFileName');
+                if (fileEl) {
+                    fileEl.textContent = 'Uploaded: ' + fileName;
+                    fileEl.style.display = 'block';
+                }
+            });
+            showToast("CEO Signature attached to all review forms!", 'success', 2500);
+        }
+
         function handleItSignatureFileUpload(event) {
             const file = event.target.files[0];
             if (file) {
@@ -2495,27 +3183,7 @@
                     return;
                 }
                 const reader = new FileReader();
-                reader.onload = function (e) {
-                    const dataUrl = e.target.result;
-                    const itImg = document.getElementById('itCeoSignImage');
-                    if (itImg) itImg.src = dataUrl;
-                    const fileNameEl = document.getElementById('itSigFileName');
-                    if (fileNameEl) {
-                        fileNameEl.textContent = 'Uploaded: ' + file.name;
-                        fileNameEl.style.display = 'block';
-                    }
-
-                    // Keep synchronized on operations as well so ma'am's signature is updated everywhere
-                    const opsImg = document.getElementById('opsCeoSignImage');
-                    if (opsImg) opsImg.src = dataUrl;
-                    const opsFileEl = document.getElementById('opsSigFileName');
-                    if (opsFileEl) {
-                        opsFileEl.textContent = 'Uploaded: ' + file.name;
-                        opsFileEl.style.display = 'block';
-                    }
-
-                    showToast("CEO Signature attached to both forms!", 'success', 2500);
-                };
+                reader.onload = e => syncSignatureDataURL(e.target.result, file.name);
                 reader.readAsDataURL(file);
             }
         }
@@ -2528,27 +3196,20 @@
                     return;
                 }
                 const reader = new FileReader();
-                reader.onload = function (e) {
-                    const dataUrl = e.target.result;
-                    const opsImg = document.getElementById('opsCeoSignImage');
-                    if (opsImg) opsImg.src = dataUrl;
-                    const fileNameEl = document.getElementById('opsSigFileName');
-                    if (fileNameEl) {
-                        fileNameEl.textContent = 'Uploaded: ' + file.name;
-                        fileNameEl.style.display = 'block';
-                    }
+                reader.onload = e => syncSignatureDataURL(e.target.result, file.name);
+                reader.readAsDataURL(file);
+            }
+        }
 
-                    // Keep synchronized on IT form as well
-                    const itImg = document.getElementById('itCeoSignImage');
-                    if (itImg) itImg.src = dataUrl;
-                    const itFileEl = document.getElementById('itSigFileName');
-                    if (itFileEl) {
-                        itFileEl.textContent = 'Uploaded: ' + file.name;
-                        itFileEl.style.display = 'block';
-                    }
-
-                    showToast("CEO Signature attached to both forms!", 'success', 2500);
-                };
+        function handleTaSignatureFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select a valid image file');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = e => syncSignatureDataURL(e.target.result, file.name);
                 reader.readAsDataURL(file);
             }
         }
@@ -2573,6 +3234,17 @@
             const fileNameEl = document.getElementById('opsSigFileName');
             if (fileNameEl) fileNameEl.style.display = 'none';
             if (!quiet) showToast('Operations Signature reset to default', 'loading', 2000);
+        }
+
+        function resetTaDefaultSignature(quiet = false) {
+            if (!defaultMaamSigURL) defaultMaamSigURL = createSignaturePNG("Sheetal", "#1e3a8a");
+            const taImg = document.getElementById('taCeoSignImage');
+            if (taImg) taImg.src = defaultMaamSigURL;
+            const fileInput = document.getElementById('taCeoSignFileInput');
+            if (fileInput) fileInput.value = '';
+            const fileNameEl = document.getElementById('taSigFileName');
+            if (fileNameEl) fileNameEl.style.display = 'none';
+            if (!quiet) showToast('TA Signature reset to default', 'loading', 2000);
         }
 
         // Backward compatibility wrappers
@@ -2618,6 +3290,27 @@
                 }
             });
             const badge = document.getElementById('itLiveScoreBadge');
+            if (badge) {
+                if (count > 0) {
+                    const avg = (sum / count).toFixed(2);
+                    badge.innerHTML = `Average Score: <strong>${avg} / 5.0</strong>`;
+                } else {
+                    badge.innerHTML = `Average Score: <strong>— / 5.0</strong>`;
+                }
+            }
+        }
+
+        function calculateTaAvgScore() {
+            const scores = document.querySelectorAll('.calc-score-ta');
+            let sum = 0, count = 0;
+            scores.forEach(inp => {
+                const val = parseFloat(inp.value);
+                if (!isNaN(val) && val >= 1 && val <= 5) {
+                    sum += val;
+                    count++;
+                }
+            });
+            const badge = document.getElementById('taLiveScoreBadge');
             if (badge) {
                 if (count > 0) {
                     const avg = (sum / count).toFixed(2);
@@ -2685,6 +3378,33 @@
             `;
         }
 
+        function addTaGoalRow() {
+            const tbody = document.getElementById('taGoalsTable').getElementsByTagName('tbody')[0];
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="Goal title"></td>
+                <td><input type="text" placeholder="Target deliverable"></td>
+                <td><input type="date"></td>
+                <td><input type="text" value="Planned" placeholder="Status"></td>
+            `;
+        }
+
+        function addTaTrainingRow() {
+            const tbody = document.getElementById('taTrainingTable').getElementsByTagName('tbody')[0];
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="Skill / Focus Area"></td>
+                <td><input type="text" placeholder="Recommended course / training"></td>
+                <td>
+                    <select>
+                        <option value="High" selected>High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </td>
+            `;
+        }
+
         // ==========================================
         // 5. Toast Notification
         // ==========================================
@@ -2746,19 +3466,22 @@
 
         function resetCurrentForm() {
             if (confirm('Are you sure you want to clear all data and reset to a completely blank form?')) {
-                // Blank out all data fields on both forms
+                // Blank out all data fields across all forms
                 clearForm('operationsForm');
                 clearForm('itPerformanceForm');
+                clearForm('taPerformanceForm');
 
                 // Ensure default Sheetal Ma'am signature preview is maintained
                 resetOpsDefaultSignature(true);
                 resetItDefaultSignature(true);
+                resetTaDefaultSignature(true);
 
                 // Reset average score badges to blank display
                 calculateOpsAvgScore();
                 calculateItAvgScore();
+                calculateTaAvgScore();
 
-                showToast('All data has been cleared and blanked on both forms', 'success', 2500);
+                showToast('All data has been cleared and blanked across all forms', 'success', 2500);
             }
         }
 
@@ -2767,31 +3490,31 @@
         // ==========================================
         function downloadExcel() {
             const isOps = currentDepartment === 'operations';
-            const form = document.getElementById(isOps ? 'operationsForm' : 'itPerformanceForm');
-            const empName = (document.getElementById(isOps ? 'opsEmployeeName' : 'itEmployeeName').value || 'Employee').trim();
-            const deptName = isOps ? 'Operations' : 'IT';
+            const isTa = currentDepartment === 'ta';
+            const form = document.getElementById(isOps ? 'operationsForm' : (isTa ? 'taPerformanceForm' : 'itPerformanceForm'));
+            const prefix = isOps ? 'ops' : (isTa ? 'ta' : 'it');
+            const deptName = isOps ? 'Operations' : (isTa ? 'Talent Acquisition' : 'IT');
+            const empName = (document.getElementById(prefix + 'EmployeeName')?.value || 'Employee').trim();
 
             showToast(`Generating ${deptName} Excel report...`, 'loading', 1500);
 
-            const formData = new FormData(form);
             const reviewData = [];
-
             reviewData.push({ 'Category': 'Department', 'Detail': deptName });
             reviewData.push({ 'Category': 'Employee Name', 'Detail': empName });
-            reviewData.push({ 'Category': 'Employee ID', 'Detail': document.getElementById(isOps ? 'opsEmployeeId' : 'itEmployeeId')?.value || '' });
-            reviewData.push({ 'Category': 'Designation', 'Detail': document.getElementById(isOps ? 'opsDesignation' : 'itDesignation')?.value || '' });
-            reviewData.push({ 'Category': 'Reporting Manager', 'Detail': document.getElementById(isOps ? 'opsManager' : 'itManager')?.value || '' });
-            reviewData.push({ 'Category': 'Review Date', 'Detail': document.getElementById(isOps ? 'opsReviewDate' : 'itReviewDate')?.value || '' });
-            reviewData.push({ 'Category': 'Review Period', 'Detail': document.getElementById(isOps ? 'opsReviewPeriod' : 'itReviewPeriod')?.value || '' });
-            reviewData.push({ 'Category': 'L&D Executive', 'Detail': document.getElementById(isOps ? 'opsLdExecutive' : 'itLdExecutive')?.value || '' });
+            reviewData.push({ 'Category': 'Employee ID', 'Detail': document.getElementById(prefix + 'EmployeeId')?.value || '' });
+            reviewData.push({ 'Category': 'Designation', 'Detail': document.getElementById(prefix + 'Designation')?.value || '' });
+            reviewData.push({ 'Category': 'Reporting Manager', 'Detail': document.getElementById(prefix + 'Manager')?.value || '' });
+            reviewData.push({ 'Category': 'Review Date', 'Detail': document.getElementById(prefix + 'ReviewDate')?.value || '' });
+            reviewData.push({ 'Category': 'Review Period', 'Detail': document.getElementById(prefix + 'ReviewPeriod')?.value || '' });
+            reviewData.push({ 'Category': 'L&D Executive', 'Detail': document.getElementById(prefix + 'LdExecutive')?.value || '' });
 
             // Achievements & Improvements
-            reviewData.push({ 'Category': 'Key Achievements', 'Detail': document.getElementById(isOps ? 'opsAchievements' : 'itAchievements')?.value || '' });
-            reviewData.push({ 'Category': 'Areas for Improvement', 'Detail': document.getElementById(isOps ? 'opsImprovements' : 'itImprovements')?.value || '' });
+            reviewData.push({ 'Category': 'Key Achievements', 'Detail': document.getElementById(prefix + 'Achievements')?.value || '' });
+            reviewData.push({ 'Category': 'Areas for Improvement', 'Detail': document.getElementById(prefix + 'Improvements')?.value || '' });
 
             // Comments
-            reviewData.push({ 'Category': 'Employee Comments', 'Detail': document.getElementById(isOps ? 'opsEmployeeComments' : 'itEmployeeComments')?.value || '' });
-            reviewData.push({ 'Category': 'Manager Comments', 'Detail': document.getElementById(isOps ? 'opsManagerComments' : 'itManagerComments')?.value || '' });
+            reviewData.push({ 'Category': 'Employee Comments', 'Detail': document.getElementById(prefix + 'EmployeeComments')?.value || '' });
+            reviewData.push({ 'Category': 'Manager Comments', 'Detail': document.getElementById(prefix + 'ManagerComments')?.value || '' });
 
             // Overall rating
             const checkedRating = form.querySelector('input[type="radio"]:checked');
@@ -2808,7 +3531,7 @@
             XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
 
             // Competencies Sheet
-            const evalTableId = isOps ? 'opsEvalTable' : 'itEvalTable';
+            const evalTableId = prefix + 'EvalTable';
             const evalRows = [];
             document.querySelectorAll(`#${evalTableId} tbody tr`).forEach(tr => {
                 const metric = tr.querySelector('.area-name')?.textContent?.trim() || '';
@@ -2820,7 +3543,8 @@
             XLSX.utils.book_append_sheet(wb, wsEval, 'Competencies');
 
             const cleanEmp = empName.replace(/[^a-zA-Z0-9_-]/g, '_');
-            XLSX.writeFile(wb, `${cleanEmp}_${deptName}_Performance_Review.xlsx`);
+            const cleanDept = deptName.replace(/[^a-zA-Z0-9_-]/g, '_');
+            XLSX.writeFile(wb, `${cleanEmp}_${cleanDept}_Performance_Review.xlsx`);
             showToast('Excel report downloaded successfully!', 'success', 3000);
         }
 
@@ -2829,7 +3553,9 @@
         // ==========================================
         async function downloadPDF() {
             const isOps = currentDepartment === 'operations';
-            const form = document.getElementById(isOps ? 'operationsForm' : 'itPerformanceForm');
+            const isTa = currentDepartment === 'ta';
+            const form = document.getElementById(isOps ? 'operationsForm' : (isTa ? 'taPerformanceForm' : 'itPerformanceForm'));
+            const prefix = isOps ? 'ops' : (isTa ? 'ta' : 'it');
 
             if (!form.checkValidity()) {
                 form.reportValidity();
@@ -2842,10 +3568,10 @@
                 downloadBtn.style.opacity = '0.7';
             }
 
-            const deptTitle = isOps ? 'Operations' : 'IT';
-            showToast(`Rendering official ${deptTitle} review PDF...`, 'loading', 0);
+            const deptTitle = isOps ? 'Operations' : (isTa ? 'Talent_Acquisition' : 'IT');
+            showToast(`Rendering official ${deptTitle.replace('_', ' ')} review PDF...`, 'loading', 0);
 
-            const element = document.getElementById(isOps ? 'operationsDocument' : 'itDocument');
+            const element = document.getElementById(isOps ? 'operationsDocument' : (isTa ? 'taDocument' : 'itDocument'));
 
             // Scroll to top
             window.scrollTo(0, 0);
@@ -2865,7 +3591,7 @@
                 replacers.push({ orig: ta, replacer: div });
             });
 
-            element.querySelectorAll('.calc-score-ops, .calc-score-it, input[type="number"]').forEach(inp => {
+            element.querySelectorAll('.calc-score-ops, .calc-score-it, .calc-score-ta, input[type="number"]').forEach(inp => {
                 const div = document.createElement('div');
                 div.className = 'pdf-rendered-score';
                 div.textContent = inp.value || ' ';
@@ -2875,7 +3601,7 @@
             });
 
             element.querySelectorAll('input[type="text"], input[type="date"]').forEach(inp => {
-                if (inp.id === 'itCeoSignName' || inp.id === 'opsCeoSignName' || inp.id === 'opsManagerSignName' || inp.id === 'opsLdSignName') return;
+                if (inp.id === 'itCeoSignName' || inp.id === 'opsCeoSignName' || inp.id === 'taCeoSignName' || inp.id === 'opsManagerSignName' || inp.id === 'opsLdSignName') return;
                 const div = document.createElement('div');
                 div.className = 'pdf-rendered-inline';
                 div.textContent = inp.value || ' ';
@@ -2896,8 +3622,8 @@
             // Brief pause for browser layout reflow
             await new Promise(resolve => setTimeout(resolve, 150));
 
-            const empName = (document.getElementById(isOps ? 'opsEmployeeName' : 'itEmployeeName').value || 'Employee').trim().replace(/[^a-zA-Z0-9_-]/g, '_');
-            const reviewDate = document.getElementById(isOps ? 'opsReviewDate' : 'itReviewDate').value || '2026';
+            const empName = (document.getElementById(prefix + 'EmployeeName')?.value || 'Employee').trim().replace(/[^a-zA-Z0-9_-]/g, '_');
+            const reviewDate = document.getElementById(prefix + 'ReviewDate')?.value || '2026';
             const fileName = `${empName}_${deptTitle}_Performance_Review_${reviewDate}.pdf`;
 
             try {
