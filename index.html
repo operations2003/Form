@@ -436,14 +436,18 @@
         }
 
         .section-num {
-            width: 26px;
-            height: 26px;
+            min-width: 28px;
+            height: 28px;
+            padding: 0 4px;
             border-radius: 6px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             font-size: 12px;
             font-weight: 800;
+            line-height: 1;
+            flex-shrink: 0;
+            box-sizing: border-box;
         }
 
         .it-theme .section-num {
@@ -605,11 +609,13 @@
             width: 28px;
             height: 28px;
             line-height: 28px;
+            text-align: center;
             color: white;
             font-weight: 800;
             font-size: 13px;
             border-radius: 50%;
             margin-bottom: 6px;
+            box-sizing: border-box;
         }
 
         .it-theme .scale-val {
@@ -647,6 +653,8 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .it-theme .avg-score-badge {
@@ -711,9 +719,11 @@
         }
 
         .rating-input-box {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
+            white-space: nowrap;
+            flex-wrap: nowrap;
         }
 
         .rating-input-box input[type="number"] {
@@ -726,6 +736,8 @@
             font-size: 12px;
             color: var(--text-muted);
             font-weight: 600;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         /* Radio group cards */
@@ -1130,10 +1142,23 @@
 
         .pdf-rendered-score {
             display: inline-block;
-            padding: 4px 8px;
+            min-width: 44px;
+            text-align: center;
+            padding: 4px 6px;
             font-size: 13px;
             font-weight: 700;
             color: #0f172a;
+            background: #f8fafc;
+            border: 1.5px solid #cbd5e1;
+            border-radius: var(--radius-sm);
+            line-height: 1.2;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .pdf-rendered-date {
+            white-space: nowrap !important;
+            font-variant-numeric: tabular-nums;
         }
 
         /* Print & PDF Clean Styling */
@@ -1177,6 +1202,60 @@
             font-size: 12px !important;
             box-shadow: none !important;
             border: 1px solid #cbd5e1 !important;
+        }
+
+        .pdf-export-mode table.custom-table {
+            table-layout: fixed !important;
+            width: 100% !important;
+        }
+
+        .pdf-export-mode table.custom-table th,
+        .pdf-export-mode table.custom-table td {
+            overflow: visible !important;
+            word-wrap: break-word !important;
+        }
+
+        .pdf-export-mode .custom-table td .pdf-rendered-inline {
+            padding: 6px 8px !important;
+            font-size: 12.5px !important;
+            min-height: 30px !important;
+        }
+
+        .pdf-export-mode .rating-input-box {
+            display: inline-flex !important;
+            align-items: center !important;
+            white-space: nowrap !important;
+            flex-wrap: nowrap !important;
+            gap: 6px !important;
+        }
+
+        .pdf-export-mode .rating-suffix {
+            display: inline-block !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            color: #475569 !important;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+        }
+
+        .pdf-export-mode .section-num {
+            min-width: 28px !important;
+            height: 28px !important;
+            line-height: 28px !important;
+            text-align: center !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+        }
+
+        .pdf-export-mode .scale-val {
+            line-height: 28px !important;
+            text-align: center !important;
+            display: inline-block !important;
+        }
+
+        .pdf-export-mode .avg-score-badge {
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
         }
 
         .pdf-export-mode .doc-header {
@@ -1648,10 +1727,10 @@
                         <table class="custom-table" id="opsGoalsTable">
                             <thead>
                                 <tr>
-                                    <th>Goal</th>
-                                    <th>Target</th>
-                                    <th>Deadline</th>
-                                    <th>Status</th>
+                                    <th style="width: 28%;">Goal</th>
+                                    <th style="width: 38%;">Target</th>
+                                    <th style="width: 130px;">Deadline</th>
+                                    <th style="width: 110px;">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1695,9 +1774,9 @@
                         <table class="custom-table" id="opsTrainingTable">
                             <thead>
                                 <tr>
-                                    <th>Skill / Operational Area</th>
-                                    <th>Training Required</th>
-                                    <th class="w-140">Priority</th>
+                                    <th style="width: 42%;">Skill / Operational Area</th>
+                                    <th style="width: 42%;">Training Required</th>
+                                    <th style="width: 130px;">Priority</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2505,7 +2584,7 @@
                 <section class="section">
                     <div class="section-header">
                         <div class="section-title-wrap">
-                            <span class="section-num">1</span>
+                            <span class="section-num">01</span>
                             <div>
                                 <h3 class="section-title">Employee Information</h3>
                                 <p class="section-subtitle">Basic employee profile and review cycle identification</p>
@@ -2567,7 +2646,7 @@
                 <section class="section">
                     <div class="section-header">
                         <div class="section-title-wrap">
-                            <span class="section-num">2</span>
+                            <span class="section-num">02</span>
                             <div>
                                 <h3 class="section-title">Rating Scale Reference</h3>
                                 <p class="section-subtitle">Evaluation rubric standard applied across all functional areas</p>
@@ -2608,7 +2687,7 @@
                 <section class="section">
                     <div class="section-header">
                         <div class="section-title-wrap">
-                            <span class="section-num">3</span>
+                            <span class="section-num">03</span>
                             <div>
                                 <h3 class="section-title">Performance Evaluation (Functional Competencies)</h3>
                                 <p class="section-subtitle">Rate employee performance across 9 core talent acquisition competency metrics</p>
@@ -2728,7 +2807,7 @@
                 <section class="section">
                     <div class="section-header">
                         <div class="section-title-wrap">
-                            <span class="section-num">4</span>
+                            <span class="section-num">04</span>
                             <div>
                                 <h3 class="section-title">Key Accomplishments &amp; Milestones</h3>
                                 <p class="section-subtitle">Significant deliverables completed in this review cycle</p>
@@ -2747,7 +2826,7 @@
                 <section class="section">
                     <div class="section-header">
                         <div class="section-title-wrap">
-                            <span class="section-num">5</span>
+                            <span class="section-num">05</span>
                             <div>
                                 <h3 class="section-title">Areas for Growth &amp; Improvement</h3>
                                 <p class="section-subtitle">Development priorities and operational focal points for the next period</p>
@@ -2766,7 +2845,7 @@
                 <section class="section">
                     <div class="section-header">
                         <div class="section-title-wrap">
-                            <span class="section-num">6</span>
+                            <span class="section-num">06</span>
                             <div>
                                 <h3 class="section-title">Goals &amp; Performance Objectives</h3>
                                 <p class="section-subtitle">Actionable milestones established for the upcoming review window</p>
@@ -2779,10 +2858,10 @@
                         <table class="custom-table" id="taGoalsTable">
                             <thead>
                                 <tr>
-                                    <th>Objective / Goal Title</th>
-                                    <th>Target Output Metric</th>
-                                    <th style="width: 150px;">Target Date</th>
-                                    <th style="width: 140px;">Status</th>
+                                    <th style="width: 32%;">Objective / Goal Title</th>
+                                    <th style="width: 32%;">Target Output Metric</th>
+                                    <th style="width: 130px;">Target Date</th>
+                                    <th style="width: 110px;">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2807,7 +2886,7 @@
                 <section class="section">
                     <div class="section-header">
                         <div class="section-title-wrap">
-                            <span class="section-num">7</span>
+                            <span class="section-num">07</span>
                             <div>
                                 <h3 class="section-title">Professional Development &amp; Training Roadmap</h3>
                                 <p class="section-subtitle">Specialized training programs, talent sourcing workshops, or skill interventions</p>
@@ -2820,9 +2899,9 @@
                         <table class="custom-table" id="taTrainingTable">
                             <thead>
                                 <tr>
-                                    <th>Skill / Focus Area</th>
-                                    <th>Recommended Course / Certification</th>
-                                    <th style="width: 150px;">Priority Level</th>
+                                    <th style="width: 42%;">Skill / Focus Area</th>
+                                    <th style="width: 42%;">Recommended Course / Certification</th>
+                                    <th style="width: 130px;">Priority Level</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2846,7 +2925,7 @@
                 <section class="section">
                     <div class="section-header">
                         <div class="section-title-wrap">
-                            <span class="section-num">8</span>
+                            <span class="section-num">08</span>
                             <div>
                                 <h3 class="section-title">Employee Self-Reflection &amp; Feedback</h3>
                                 <p class="section-subtitle">Employee perspective on team support, tooling, and workload calibration</p>
@@ -2865,7 +2944,7 @@
                 <section class="section">
                     <div class="section-header">
                         <div class="section-title-wrap">
-                            <span class="section-num">9</span>
+                            <span class="section-num">09</span>
                             <div>
                                 <h3 class="section-title">Evaluator Summary &amp; Management Feedback</h3>
                                 <p class="section-subtitle">Comprehensive management assessment and performance overview</p>
@@ -3559,6 +3638,12 @@
 
             if (!form.checkValidity()) {
                 form.reportValidity();
+                showToast('Please fill out all required fields (*)', 'error', 3500);
+                const downloadBtn = document.getElementById('btnDownloadPDF');
+                if (downloadBtn) {
+                    downloadBtn.disabled = false;
+                    downloadBtn.style.opacity = '1';
+                }
                 return;
             }
 
@@ -3594,7 +3679,8 @@
             element.querySelectorAll('.calc-score-ops, .calc-score-it, .calc-score-ta, input[type="number"]').forEach(inp => {
                 const div = document.createElement('div');
                 div.className = 'pdf-rendered-score';
-                div.textContent = inp.value || ' ';
+                const numVal = parseFloat(inp.value);
+                div.textContent = !isNaN(numVal) ? numVal.toFixed(1) : (inp.value || '—');
                 inp.style.display = 'none';
                 inp.parentNode.insertBefore(div, inp);
                 replacers.push({ orig: inp, replacer: div });
@@ -3604,6 +3690,9 @@
                 if (inp.id === 'itCeoSignName' || inp.id === 'opsCeoSignName' || inp.id === 'taCeoSignName' || inp.id === 'opsManagerSignName' || inp.id === 'opsLdSignName') return;
                 const div = document.createElement('div');
                 div.className = 'pdf-rendered-inline';
+                if (inp.type === 'date') {
+                    div.classList.add('pdf-rendered-date');
+                }
                 div.textContent = inp.value || ' ';
                 inp.style.display = 'none';
                 inp.parentNode.insertBefore(div, inp);
@@ -3619,14 +3708,17 @@
                 replacers.push({ orig: sel, replacer: div });
             });
 
-            // Brief pause for browser layout reflow
-            await new Promise(resolve => setTimeout(resolve, 150));
+            // Pause for browser layout reflow
+            await new Promise(resolve => setTimeout(resolve, 200));
 
             const empName = (document.getElementById(prefix + 'EmployeeName')?.value || 'Employee').trim().replace(/[^a-zA-Z0-9_-]/g, '_');
             const reviewDate = document.getElementById(prefix + 'ReviewDate')?.value || '2026';
             const fileName = `${empName}_${deptTitle}_Performance_Review_${reviewDate}.pdf`;
 
             try {
+                // Measure safe element boundaries in DOM coordinates
+                const elementRect = element.getBoundingClientRect();
+
                 const masterCanvas = await html2canvas(element, {
                     scale: 2,
                     useCORS: true,
@@ -3646,19 +3738,84 @@
 
                 const canvasWidth = masterCanvas.width;
                 const canvasHeight = masterCanvas.height;
+                const scaleRatio = canvasWidth / elementRect.width;
 
                 // A4 printable area (width: 194mm, height: 281mm with 8mm margins)
                 const margin = 8;
                 const printWidth = 194;
                 const pagePrintHeight = 281;
-
                 const pxPageHeight = Math.floor((canvasWidth * pagePrintHeight) / printWidth);
+
+                // Collect bounding rects of atomic elements (sections, table rows, cards, headers)
+                // in canvas coordinate space to prevent slicing through them
+                const breakElements = element.querySelectorAll(
+                    '.section, thead, tbody tr, .scale-card, .radio-card, .sig-card, .sig-wrapper, .grid-2, .grid-3'
+                );
+                const blocks = [];
+                breakElements.forEach(el => {
+                    if (el.offsetParent === null && el.offsetHeight === 0) return;
+                    const r = el.getBoundingClientRect();
+                    const top = Math.round((r.top - elementRect.top) * scaleRatio);
+                    const bottom = Math.round((r.bottom - elementRect.top) * scaleRatio);
+                    if (bottom > top + 4) {
+                        blocks.push({ el, top, bottom });
+                    }
+                });
 
                 let sourceY = 0;
                 let pageIndex = 0;
 
-                while (sourceY < canvasHeight) {
-                    const chunkPxHeight = Math.min(pxPageHeight, canvasHeight - sourceY);
+                while (sourceY < canvasHeight - 15) {
+                    const targetBottom = sourceY + pxPageHeight;
+                    let chunkPxHeight = pxPageHeight;
+
+                    if (targetBottom >= canvasHeight) {
+                        chunkPxHeight = canvasHeight - sourceY;
+                    } else {
+                        // Detect if targetBottom cuts through any atomic block
+                        let bestBreakY = null;
+                        let cutElement = null;
+
+                        for (const b of blocks) {
+                            if (b.top < targetBottom && b.bottom > targetBottom) {
+                                // Found an element straddling the page boundary
+                                // Ensure the break allows at least 35% of page height
+                                if (b.top > sourceY + Math.floor(pxPageHeight * 0.35)) {
+                                    if (bestBreakY === null || b.top < bestBreakY) {
+                                        bestBreakY = b.top;
+                                        cutElement = b.el;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (bestBreakY !== null) {
+                            // If the element to be broken is the first row of a table body,
+                            // break before the whole table or section to avoid an orphaned table header
+                            if (cutElement && cutElement.tagName === 'TR') {
+                                const isFirstTr = !cutElement.previousElementSibling ||
+                                    (cutElement.parentElement && cutElement.parentElement.tagName === 'TBODY' && cutElement === cutElement.parentElement.firstElementChild);
+                                if (isFirstTr) {
+                                    const tableWrap = cutElement.closest('.eval-table-wrap') || cutElement.closest('table') || cutElement.closest('.section');
+                                    if (tableWrap) {
+                                        const twR = tableWrap.getBoundingClientRect();
+                                        const twTop = Math.round((twR.top - elementRect.top) * scaleRatio);
+                                        if (twTop > sourceY + Math.floor(pxPageHeight * 0.35)) {
+                                            bestBreakY = twTop;
+                                        }
+                                    }
+                                }
+                            }
+                            chunkPxHeight = bestBreakY - sourceY;
+                        } else {
+                            chunkPxHeight = Math.min(pxPageHeight, canvasHeight - sourceY);
+                        }
+                    }
+
+                    // Safety guard against non-advancement
+                    if (chunkPxHeight <= 0) {
+                        chunkPxHeight = Math.min(pxPageHeight, canvasHeight - sourceY);
+                    }
 
                     const pageCanvas = document.createElement('canvas');
                     pageCanvas.width = canvasWidth;
